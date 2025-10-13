@@ -283,16 +283,32 @@ cd /home/ec2-user
 git clone https://github.com/YOUR_USERNAME/windsurf-project.git
 cd windsurf-project/backend
 
-# Update application.properties with RDS endpoint
-nano src/main/resources/application.properties
+# Create environment file with your configuration
+nano .env.production
 
-# Update these values:
-spring.datasource.url=jdbc:mysql://valorant-arena-db.xxxxx.us-east-1.rds.amazonaws.com:3306/valorant_arena
-spring.datasource.username=admin
-spring.datasource.password=YOUR_RDS_PASSWORD
+# Add these values (replace with your actual values):
+DB_URL=jdbc:mysql://valorant-arena-db.cf66qis4ur83.eu-north-1.rds.amazonaws.com:3306/valorant_arena?useSSL=true&requireSSL=true&serverTimezone=UTC
+DB_USERNAME=admin
+DB_PASSWORD=YOUR_RDS_PASSWORD
 
-# Also update CORS settings for your domain:
-cors.allowed-origins=https://yourdomain.com,https://www.yourdomain.com
+JWT_SECRET=your-production-jwt-secret-minimum-256-bits
+
+# CORS settings - Use your EC2 public IP/DNS (no domain needed)
+# Get your EC2 public IP from AWS Console or run: curl http://checkip.amazonaws.com
+CORS_ORIGINS=http://YOUR_EC2_PUBLIC_IP:4200,http://ec2-XX-XX-XX-XX.eu-north-1.compute.amazonaws.com:4200
+
+# Or if testing locally, keep localhost:
+# CORS_ORIGINS=http://localhost:4200
+
+RIOT_API_KEY=your-riot-api-key
+DISCORD_CLIENT_ID=your-discord-client-id
+DISCORD_CLIENT_SECRET=your-discord-client-secret
+DISCORD_BOT_TOKEN=your-discord-bot-token
+
+SPRING_PROFILES_ACTIVE=prod
+
+# Load environment variables
+source .env.production
 
 # Build the application
 mvn clean package -DskipTests

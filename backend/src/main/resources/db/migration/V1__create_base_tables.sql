@@ -1,24 +1,25 @@
 -- ============================================
 -- BASE TABLES - USER MANAGEMENT
+-- MySQL 8.0+ Compatible
 -- Version: 1.0
 -- ============================================
 
 -- ============================================
 -- USERS TABLE
 -- ============================================
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     riot_id VARCHAR(100),
     riot_tag VARCHAR(10),
-    rank VARCHAR(50),
+    `rank` VARCHAR(50),  -- 'rank' is a reserved word in MySQL, use backticks
     role VARCHAR(20) NOT NULL DEFAULT 'USER',
     status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
     profile_picture_url VARCHAR(500),
     discord_id VARCHAR(100),
-    is_verified BOOLEAN DEFAULT false,
+    is_verified TINYINT(1) DEFAULT 0,  -- MySQL BOOLEAN = TINYINT(1)
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT chk_user_role CHECK (role IN ('USER', 'ADMIN', 'MODERATOR', 'ORGANIZER')),
