@@ -1,0 +1,267 @@
+<div class="min-h-screen bg-valorant-dark py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-white">Profile</h1>
+      <p class="text-gray-400 mt-2">Manage your account settings</p>
+    </div>
+
+    <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+      <div class="flex items-center mb-6">
+        <!-- Profile Picture with Discord Avatar or Default -->
+        <div class="relative mr-6">
+          <img *ngIf="currentUser && currentUser.discordId && currentUser.discordAvatar" 
+               [src]="'https://cdn.discordapp.com/avatars/' + currentUser.discordId + '/' + currentUser.discordAvatar + '.png'" 
+               alt="Avatar" 
+               class="w-24 h-24 rounded-full border-2 border-valorant-red"
+               onerror="this.src='assets/default-avatar.svg'">
+          <img *ngIf="!currentUser || !currentUser.discordId || !currentUser.discordAvatar" 
+               src="assets/default-avatar.svg" 
+               alt="Avatar" 
+               class="w-24 h-24 rounded-full border-2 border-gray-600">
+          <!-- Discord Badge if linked -->
+          <div *ngIf="currentUser?.discordId" 
+               class="absolute bottom-0 right-0 w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center border-2 border-gray-800">
+            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+            </svg>
+          </div>
+        </div>
+        <div class="flex-1">
+          <h2 class="text-2xl font-bold text-white">{{ currentUser?.username }}</h2>
+          <p class="text-gray-400">{{ currentUser?.email }}</p>
+          <p class="text-valorant-red mt-1">{{ currentUser?.rank }}</p>
+          
+          <!-- Discord Status -->
+          <div class="mt-2">
+            <div *ngIf="currentUser?.discordUsername" class="flex items-center text-indigo-400 text-sm">
+              <svg class="inline w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+              </svg>
+              <span>{{ currentUser?.discordUsername }}</span>
+              <span class="ml-2 text-green-400">✓ Linked</span>
+            </div>
+            <button *ngIf="!currentUser?.discordId" 
+                    (click)="linkDiscordAccount()"
+                    class="mt-1 flex items-center text-sm bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-3 py-1.5 rounded transition-colors">
+              <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+              </svg>
+              Link Discord Account
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-700 pt-6">
+        <h3 class="text-lg font-semibold text-white mb-4">Account Information</h3>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-1">Username</label>
+            <input type="text" [value]="currentUser?.username" disabled class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white">
+          </div>
+          <div>
+            <input type="email" [value]="currentUser?.email" disabled class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-1">Valorant ID</label>
+            <div class="flex items-center space-x-2">
+              <input type="text" [value]="currentUser?.valorantId?.startsWith('NOT_LINKED_') ? 'Not Linked' : currentUser?.valorantId" disabled class="flex-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white">
+              <button 
+                *ngIf="currentUser?.valorantId && !currentUser?.valorantId?.startsWith('NOT_LINKED_')"
+                (click)="unlinkRiotAccount()"
+                class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded whitespace-nowrap">
+                Unlink
+              </button>
+              <button 
+                *ngIf="currentUser?.valorantId?.startsWith('NOT_LINKED_')"
+                (click)="openLinkRiotModal()"
+                class="bg-valorant-red hover:bg-red-600 text-white font-bold py-2 px-4 rounded whitespace-nowrap">
+                Link Riot ID
+              </button>
+            </div>
+            <p *ngIf="currentUser?.isVerified" class="text-green-500 text-sm mt-1">✓ Verified</p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-1">Region</label>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-400 mb-1">Current Rank</label>
+            <input type="text" [value]="currentUser?.rank" disabled class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white">
+          </div>
+        </div>
+
+        <div class="mt-6 flex space-x-4">
+          <button class="bg-valorant-red hover:bg-red-600 text-white font-bold py-2 px-6 rounded">
+            Edit Profile
+          </button>
+          <button class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded">
+            Change Password
+          </button>
+        </div>
+      </div>
+
+      <!-- Valorant Stats Section -->
+      <div *ngIf="currentUser?.valorantId && !currentUser?.valorantId?.startsWith('NOT_LINKED')" class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <h3 class="text-lg font-semibold text-white mb-4">Valorant Statistics</h3>
+        
+        <!-- Loading State -->
+        <div *ngIf="loadingStats" class="text-center py-8">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-valorant-red mx-auto"></div>
+          <p class="text-gray-400 mt-4">Loading stats...</p>
+        </div>
+
+        <!-- Player Stats -->
+        <div *ngIf="!loadingStats && playerStats" class="space-y-6">
+          <!-- Player Card -->
+          <div *ngIf="playerStats.card" class="bg-gray-700 rounded-lg p-4 flex items-center space-x-4">
+            <img [src]="playerStats.card.small" alt="Player Card" class="w-16 h-16 rounded">
+            <div>
+              <p class="text-white font-bold text-xl">{{ playerStats.name }}#{{ playerStats.tag }}</p>
+              <p class="text-gray-400">Level {{ playerStats.accountLevel || 'N/A' }}</p>
+            </div>
+          </div>
+
+          <!-- Rank & Stats Grid -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-gray-700 rounded-lg p-4 text-center">
+              <p class="text-gray-400 text-sm mb-2">Current Rank</p>
+              <p class="text-white font-bold text-lg">{{ playerStats.currentTierPatched || 'Unranked' }}</p>
+            </div>
+            <div class="bg-gray-700 rounded-lg p-4 text-center">
+              <p class="text-gray-400 text-sm mb-2">Ranked Rating</p>
+              <p class="text-valorant-red font-bold text-xl">{{ playerStats.rankedRating || 0 }} RR</p>
+            </div>
+            <div class="bg-gray-700 rounded-lg p-4 text-center">
+              <p class="text-gray-400 text-sm mb-2">ELO</p>
+              <p class="text-white font-bold text-lg">{{ playerStats.elo || 'N/A' }}</p>
+            </div>
+            <div class="bg-gray-700 rounded-lg p-4 text-center">
+              <p class="text-gray-400 text-sm mb-2">Region</p>
+              <p class="text-white font-bold text-lg">{{ (playerStats.region || 'N/A') | uppercase }}</p>
+            </div>
+          </div>
+
+          <!-- Last Game MMR Change -->
+          <div *ngIf="playerStats.mmrChangeToLastGame !== null && playerStats.mmrChangeToLastGame !== undefined" 
+               class="bg-gray-700 rounded-lg p-4">
+            <p class="text-gray-400 text-sm mb-2">Last Game Performance</p>
+            <p class="font-bold text-2xl" 
+               [class.text-green-500]="playerStats.mmrChangeToLastGame > 0"
+               [class.text-red-500]="playerStats.mmrChangeToLastGame < 0"
+               [class.text-gray-400]="playerStats.mmrChangeToLastGame === 0">
+              {{ playerStats.mmrChangeToLastGame > 0 ? '+' : '' }}{{ playerStats.mmrChangeToLastGame }} RR
+            </p>
+          </div>
+        </div>
+
+        <!-- Match History -->
+        <div *ngIf="!loadingMatches && matchHistory && matchHistory.length > 0" class="mt-6">
+          <h4 class="text-white font-semibold mb-3">Recent Competitive Matches</h4>
+          <div class="space-y-3">
+            <div *ngFor="let match of matchHistory.slice(0, 5)" class="bg-gray-700 rounded-lg p-4 hover:bg-gray-650 transition-colors">
+              <div class="flex justify-between items-start">
+                <div class="flex-1">
+                  <div class="flex items-center gap-3 mb-2">
+                    <p class="text-white font-bold text-lg">{{ match.map }}</p>
+                    <span class="px-2 py-1 text-xs rounded"
+                          [class.bg-green-600]="match.won"
+                          [class.bg-red-600]="!match.won"
+                          [class.text-white]="true">
+                      {{ match.won ? 'VICTORY' : 'DEFEAT' }}
+                    </span>
+                  </div>
+                  <div class="flex items-center gap-4 text-sm text-gray-400">
+                    <span>{{ match.gameMode | titlecase }}</span>
+                    <span>•</span>
+                    <span>{{ match.agent }}</span>
+                    <span>•</span>
+                    <span>{{ match.roundsWon }}-{{ match.roundsLost }}</span>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="mb-2">
+                    <p class="text-2xl font-bold text-white">
+                      {{ match.playerStats?.kills || 0 }}/{{ match.playerStats?.deaths || 0 }}/{{ match.playerStats?.assists || 0 }}
+                    </p>
+                    <p class="text-xs text-gray-400">K/D/A</p>
+                  </div>
+                  <div class="text-xs text-gray-500">
+                    <p>Score: {{ match.playerStats?.score || 0 }}</p>
+                    <p>HS: {{ match.playerStats?.headshots || 0 }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Loading Matches -->
+        <div *ngIf="loadingMatches" class="mt-6 text-center py-4">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-valorant-red mx-auto"></div>
+          <p class="text-gray-400 text-sm mt-2">Loading matches...</p>
+        </div>
+        
+        <!-- No Matches -->
+        <div *ngIf="!loadingMatches && (!matchHistory || matchHistory.length === 0)" class="mt-6 text-center py-4">
+          <p class="text-gray-400">No recent matches found</p>
+        </div>
+
+        <!-- No Stats Available -->
+        <div *ngIf="!loadingStats && !playerStats" class="text-center py-8">
+          <p class="text-gray-400">Unable to load Valorant stats. Please try again later.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Link Riot Account Modal -->
+<div *ngIf="showLinkRiotModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+  <div class="bg-gray-800 rounded-lg p-8 max-w-md w-full mx-4 border border-gray-700">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-white">Link Riot Account</h2>
+      <button (click)="closeLinkRiotModal()" class="text-gray-400 hover:text-white">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="mb-6">
+      <p class="text-gray-300 mb-4">Enter your Valorant Riot ID to link your account. We'll verify it with Riot Games.</p>
+      
+      <label class="block text-sm font-medium text-gray-400 mb-2">Valorant ID</label>
+      <input 
+        type="text" 
+        [(ngModel)]="valorantId"
+        placeholder="GameName#TAG"
+        class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:border-valorant-red"
+        [disabled]="isLinking">
+      <p class="text-gray-500 text-sm mt-1">Example: PlayerName#1234</p>
+
+      <div *ngIf="linkError" class="mt-4 p-3 bg-red-900 bg-opacity-50 border border-red-500 rounded-md">
+        <p class="text-red-300 text-sm">{{ linkError }}</p>
+      </div>
+
+      <div *ngIf="linkSuccess" class="mt-4 p-3 bg-green-900 bg-opacity-50 border border-green-500 rounded-md">
+        <p class="text-green-300 text-sm">{{ linkSuccess }}</p>
+      </div>
+    </div>
+
+    <div class="flex space-x-4">
+      <button 
+        (click)="linkRiotAccount()"
+        [disabled]="isLinking"
+        class="flex-1 bg-valorant-red hover:bg-red-600 text-white font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed">
+        <span *ngIf="!isLinking">Link Account</span>
+        <span *ngIf="isLinking">Verifying...</span>
+      </button>
+      <button 
+        (click)="closeLinkRiotModal()"
+        [disabled]="isLinking"
+        class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded disabled:opacity-50">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,153 @@
+<div class="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-xl shadow-2xl w-full overflow-hidden border border-gray-700">
+  <!-- Close Button -->
+  <button type="button" (click)="onCancel()" 
+    class="absolute top-4 right-4 z-10 text-valorant-red hover:text-red-400 transition-all duration-200 w-10 h-10 flex items-center justify-center font-bold text-2xl">
+    ✕
+  </button>
+
+  <!-- Header -->
+  <div class="px-8 pt-12 pb-8 text-center">
+    <div class="flex items-center justify-center mb-4">
+      <!-- Discord Avatar or Default Icon -->
+      <div class="w-20 h-20 rounded-full shadow-2xl overflow-hidden border-4 border-blue-500/30">
+        <img 
+          *ngIf="user.discordAvatar && user.discordId" 
+          [src]="'https://cdn.discordapp.com/avatars/' + user.discordId + '/' + user.discordAvatar + '.png'"
+          [alt]="user.username"
+          class="w-full h-full object-cover"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div 
+          [class.hidden]="user.discordAvatar && user.discordId"
+          class="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+          <mat-icon class="text-white text-4xl">person</mat-icon>
+        </div>
+      </div>
+    </div>
+    <h2 class="text-3xl font-bold text-white mb-2">User Details</h2>
+    <p class="text-gray-400">{{ user.username }}</p>
+  </div>
+
+  <!-- Content -->
+  <mat-dialog-content class="px-8 pb-6 overflow-y-auto">
+    <form [formGroup]="userForm" (ngSubmit)="onSave()" class="space-y-5">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Username -->
+        <div>
+          <label class="block text-sm font-medium text-white mb-2">
+            Username
+          </label>
+          <input 
+            type="text" 
+            formControlName="username"
+            class="w-full bg-white text-gray-800 rounded-lg px-4 py-3 border-0 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200 placeholder:text-gray-400 font-medium shadow-lg"
+            [class.ring-2]="userForm.get('username')?.touched && userForm.get('username')?.errors"
+            [class.ring-red-500]="userForm.get('username')?.touched && userForm.get('username')?.errors"
+            placeholder="Enter username">
+          <div *ngIf="userForm.get('username')?.touched && userForm.get('username')?.errors" class="mt-1 text-red-300 text-xs">
+            <span *ngIf="userForm.get('username')?.hasError('required')">Username is required</span>
+            <span *ngIf="userForm.get('username')?.hasError('minlength')">Minimum 3 characters</span>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label class="block text-sm font-medium text-white mb-2">
+            Email Address
+          </label>
+          <input 
+            type="email" 
+            formControlName="email"
+            class="w-full bg-white text-gray-800 rounded-lg px-4 py-3 border-0 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200 placeholder:text-gray-400 font-medium shadow-lg"
+            [class.ring-2]="userForm.get('email')?.touched && userForm.get('email')?.errors"
+            [class.ring-red-500]="userForm.get('email')?.touched && userForm.get('email')?.errors"
+            placeholder="user@example.com">
+          <div *ngIf="userForm.get('email')?.touched && userForm.get('email')?.errors" class="mt-1 text-red-300 text-xs">
+            <span *ngIf="userForm.get('email')?.hasError('required')">Email is required</span>
+            <span *ngIf="userForm.get('email')?.hasError('email')">Invalid email format</span>
+          </div>
+        </div>
+
+        <!-- Role -->
+        <div>
+          <label class="block text-sm font-medium text-white mb-2">
+            User Role
+          </label>
+          <select 
+            formControlName="role"
+            class="w-full bg-white text-gray-800 rounded-lg px-4 py-3 border-0 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200 font-medium shadow-lg cursor-pointer">
+            <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+          </select>
+        </div>
+
+        <!-- Status -->
+        <div>
+          <label class="block text-sm font-medium text-white mb-2">
+            Account Status
+          </label>
+          <select 
+            formControlName="status"
+            class="w-full bg-white text-gray-800 rounded-lg px-4 py-3 border-0 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200 font-medium shadow-lg cursor-pointer">
+            <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Verified Checkbox -->
+      <div class="flex items-center space-x-3 p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+        <input 
+          type="checkbox" 
+          formControlName="isVerified"
+          class="w-5 h-5 rounded border-gray-600 text-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 bg-gray-700 cursor-pointer">
+        <label class="text-white font-medium cursor-pointer select-none">
+          Verified User
+        </label>
+      </div>
+
+      <!-- User Stats (Read-only) -->
+      <div class="mt-6 p-5 bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg border border-gray-700 shadow-lg">
+        <h3 class="text-lg font-semibold mb-4 text-white">
+          User Statistics
+        </h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="text-center p-3 bg-gray-900/50 rounded-lg">
+            <div class="text-gray-400 text-xs mb-1">ELO</div>
+            <div class="text-white font-bold text-lg">{{ user.elo || 1000 }}</div>
+          </div>
+          <div class="text-center p-3 bg-gray-900/50 rounded-lg">
+            <div class="text-gray-400 text-xs mb-1">Matches</div>
+            <div class="text-white font-bold text-lg">{{ user.stats?.matchesPlayed || 0 }}</div>
+          </div>
+          <div class="text-center p-3 bg-gray-900/50 rounded-lg">
+            <div class="text-gray-400 text-xs mb-1">Wins</div>
+            <div class="text-green-400 font-bold text-lg">{{ user.stats?.wins || 0 }}</div>
+          </div>
+          <div class="text-center p-3 bg-gray-900/50 rounded-lg">
+            <div class="text-gray-400 text-xs mb-1">Losses</div>
+            <div class="text-red-400 font-bold text-lg">{{ user.stats?.losses || 0 }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex gap-3 pt-4">
+        <button 
+          type="button"
+          (click)="onCancel()"
+          [disabled]="loading"
+          class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold px-6 py-3 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg">
+          Cancel
+        </button>
+        <button 
+          type="submit"
+          [disabled]="userForm.invalid || loading"
+          class="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold px-6 py-3 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl flex items-center justify-center">
+          <span *ngIf="!loading">Save Changes</span>
+          <span *ngIf="loading" class="flex items-center justify-center">
+            <mat-spinner diameter="20" strokeWidth="3" class="mr-2"></mat-spinner>
+            <span>Saving...</span>
+          </span>
+        </button>
+      </div>
+    </form>
+  </mat-dialog-content>
+</div>

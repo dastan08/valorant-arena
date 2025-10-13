@@ -1,0 +1,216 @@
+<div class="min-h-screen bg-valorant-dark py-8">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-12">
+      <p class="text-gray-400">Loading match...</p>
+    </div>
+
+    <!-- Match Content -->
+    <div *ngIf="!loading && match" class="space-y-6">
+      <!-- Header -->
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-white">Match #{{ match.id }}</h1>
+          <p class="text-gray-400 mt-1">Round {{ match.round }} - {{ match.tournament?.name }}</p>
+        </div>
+        <span [class]="getStatusBadge(match.status)" 
+              class="px-4 py-2 rounded-full text-sm font-semibold text-white">
+          {{ match.status }}
+        </span>
+      </div>
+
+      <!-- Match Info Card -->
+      <div class="bg-gray-800 rounded-lg border-2" [class]="getWinnerClass(match.team1?.id || 0)">
+        <div class="p-6">
+          <!-- Teams -->
+          <div class="grid grid-cols-3 gap-4 items-center">
+            <!-- Team 1 -->
+            <div class="text-center">
+              <img [src]="match.team1?.logo || '/assets/default-team.png'" 
+                   alt="Team 1" 
+                   class="w-24 h-24 mx-auto rounded-full mb-3">
+              <h3 class="text-xl font-bold text-white">{{ match.team1?.name || 'TBD' }}</h3>
+              <p class="text-gray-400 text-sm mt-1">{{ match.team1?.members?.length || 0 }} members</p>
+            </div>
+
+            <!-- Score -->
+            <div class="text-center">
+              <div class="flex items-center justify-center space-x-4">
+                <span class="text-5xl font-bold text-white">
+                  {{ match.team1Score !== null ? match.team1Score : '-' }}
+                </span>
+                <span class="text-3xl font-bold text-gray-500">:</span>
+                <span class="text-5xl font-bold text-white">
+                  {{ match.team2Score !== null ? match.team2Score : '-' }}
+                </span>
+              </div>
+              <p class="text-gray-400 text-sm mt-2">Best of {{ match.bestOf }}</p>
+            </div>
+
+            <!-- Team 2 -->
+            <div class="text-center">
+              <img [src]="match.team2?.logo || '/assets/default-team.png'" 
+                   alt="Team 2" 
+                   class="w-24 h-24 mx-auto rounded-full mb-3">
+              <h3 class="text-xl font-bold text-white">{{ match.team2?.name || 'TBD' }}</h3>
+              <p class="text-gray-400 text-sm mt-1">{{ match.team2?.members?.length || 0 }} members</p>
+            </div>
+          </div>
+
+          <!-- Match Details -->
+          <div class="mt-6 pt-6 border-t border-gray-700 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="text-center">
+              <p class="text-gray-400 text-sm">Scheduled</p>
+              <p class="text-white font-semibold">{{ match.scheduledTime | date:'short' }}</p>
+            </div>
+            <div class="text-center" *ngIf="match.startTime">
+              <p class="text-gray-400 text-sm">Started</p>
+              <p class="text-white font-semibold">{{ match.startTime | date:'short' }}</p>
+            </div>
+            <div class="text-center" *ngIf="match.endTime">
+              <p class="text-gray-400 text-sm">Ended</p>
+              <p class="text-white font-semibold">{{ match.endTime | date:'short' }}</p>
+            </div>
+            <div class="text-center" *ngIf="match.winner">
+              <p class="text-gray-400 text-sm">Winner</p>
+              <p class="text-green-500 font-bold">{{ match.winner.name }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap gap-3" *ngIf="isParticipant()">
+        <button *ngIf="canStartMatch()"
+                (click)="startMatch()"
+                [disabled]="startingMatch"
+                class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors disabled:opacity-50">
+          {{ startingMatch ? 'Starting...' : 'Start Match' }}
+        </button>
+
+        <button *ngIf="match.status === MatchStatus.IN_PROGRESS"
+                (click)="openDispute()"
+                class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-colors">
+          Report Dispute
+        </button>
+      </div>
+
+      <!-- Score Reporting Form -->
+      <div *ngIf="canReportScore()" class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <h2 class="text-2xl font-bold text-white mb-6">Report Score</h2>
+        
+        <form [formGroup]="scoreForm" (ngSubmit)="reportScore()" class="space-y-6">
+          <div class="grid grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">
+                {{ match.team1?.name }} Score
+              </label>
+              <input type="number" 
+                     formControlName="team1Score"
+                     min="0"
+                     class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">
+                {{ match.team2?.name }} Score
+              </label>
+              <input type="number" 
+                     formControlName="team2Score"
+                     min="0"
+                     class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">
+              Screenshot URLs
+            </label>
+            <div class="space-y-2">
+              <div *ngFor="let url of scoreForm.get('screenshotUrls')?.value; let i = index" 
+                   class="flex items-center space-x-2">
+                <input type="text" 
+                       [value]="url"
+                       readonly
+                       class="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white">
+                <button type="button"
+                        (click)="removeScreenshot(i)"
+                        class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg">
+                  Remove
+                </button>
+              </div>
+              <div class="flex space-x-2">
+                <input #screenshotInput
+                       type="url" 
+                       placeholder="https://example.com/screenshot.png"
+                       class="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-valorant-red">
+                <button type="button"
+                        (click)="addScreenshot(screenshotInput.value); screenshotInput.value = ''"
+                        class="px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg">
+                  Add
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">
+              Match Replay URL (Optional)
+            </label>
+            <input type="url" 
+                   formControlName="matchReplayUrl"
+                   placeholder="https://example.com/replay"
+                   class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-valorant-red">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">
+              Notes (Optional)
+            </label>
+            <textarea formControlName="notes"
+                      rows="3"
+                      placeholder="Any additional notes..."
+                      class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-valorant-red"></textarea>
+          </div>
+
+          <div class="flex justify-end space-x-3">
+            <button type="button"
+                    *ngIf="canConfirmScore()"
+                    (click)="confirmScore()"
+                    [disabled]="confirmingScore"
+                    class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition-colors disabled:opacity-50">
+              {{ confirmingScore ? 'Confirming...' : 'Confirm Score' }}
+            </button>
+            
+            <button type="submit"
+                    [disabled]="!scoreForm.valid || reportingScore"
+                    class="px-6 py-3 bg-valorant-red hover:bg-red-600 text-white font-bold rounded-lg transition-colors disabled:opacity-50">
+              {{ reportingScore ? 'Reporting...' : 'Report Score' }}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Match Notes -->
+      <div *ngIf="match.notes" class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <h3 class="text-xl font-bold text-white mb-3">Match Notes</h3>
+        <p class="text-gray-300">{{ match.notes }}</p>
+      </div>
+
+      <!-- Server Info -->
+      <div *ngIf="match.serverInfo" class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <h3 class="text-xl font-bold text-white mb-3">Server Information</h3>
+        <p class="text-gray-300 font-mono">{{ match.serverInfo }}</p>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="!loading && !match" class="text-center py-12">
+      <p class="text-gray-400">Match not found</p>
+      <button (click)="router.navigate(['/tournaments'])" 
+              class="mt-4 bg-valorant-red hover:bg-red-600 text-white font-bold py-2 px-6 rounded">
+        Back to Tournaments
+      </button>
+    </div>
+  </div>
+</div>

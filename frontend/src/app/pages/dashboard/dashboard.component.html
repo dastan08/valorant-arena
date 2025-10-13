@@ -1,0 +1,116 @@
+<div class="min-h-screen bg-valorant-dark py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-white">Dashboard</h1>
+      <p class="text-gray-400 mt-2">Welcome back, {{ currentUser?.username }}!</p>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-400 text-sm">ELO Rating</p>
+            <p class="text-3xl font-bold text-white mt-1">{{ currentUser?.elo || 0 }}</p>
+          </div>
+          <div class="text-4xl">📊</div>
+        </div>
+      </div>
+
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-400 text-sm">Matches Played</p>
+            <p class="text-3xl font-bold text-white mt-1">{{ currentUser?.stats?.matchesPlayed || 0 }}</p>
+          </div>
+          <div class="text-4xl">🎮</div>
+        </div>
+      </div>
+
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-400 text-sm">Win Rate</p>
+            <p class="text-3xl font-bold text-white mt-1">{{ getWinRate().toFixed(1) }}%</p>
+          </div>
+          <div class="text-4xl">🏆</div>
+        </div>
+      </div>
+
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-400 text-sm">K/D/A</p>
+            <p class="text-3xl font-bold text-white mt-1">{{ getKDA() }}</p>
+          </div>
+          <div class="text-4xl">⚔️</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Player Info -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <h2 class="text-xl font-bold text-white mb-4">Player Statistics</h2>
+        <div class="space-y-4">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-400">Kills</span>
+            <span class="text-white font-semibold">{{ currentUser?.stats?.kills || 0 }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-400">Deaths</span>
+            <span class="text-white font-semibold">{{ currentUser?.stats?.deaths || 0 }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-400">Assists</span>
+            <span class="text-white font-semibold">{{ currentUser?.stats?.assists || 0 }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-400">Headshot %</span>
+            <span class="text-white font-semibold">{{ (currentUser?.stats?.headshotPercentage || 0).toFixed(1) }}%</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-400">Avg Combat Score</span>
+            <span class="text-white font-semibold">{{ currentUser?.stats?.averageCombatScore || 0 }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <h2 class="text-xl font-bold text-white mb-4">Profile Info</h2>
+        <div class="space-y-4">
+          <div>
+            <p class="text-gray-400 text-sm">Valorant ID</p>
+            <p class="text-white font-semibold">{{ currentUser?.valorantId }}</p>
+          </div>
+          <div>
+            <p class="text-gray-400 text-sm">Current Rank</p>
+            <p class="text-white font-semibold">{{ currentUser?.rank }}</p>
+          </div>
+          <div>
+            <p class="text-gray-400 text-sm">Team</p>
+            <p *ngIf="!currentUser?.team" class="text-white font-semibold">No Team</p>
+            <a *ngIf="currentUser?.team" 
+              (click)="openTeamDetail()" 
+              class="text-valorant-red hover:text-red-400 font-semibold cursor-pointer transition-colors">
+              {{ currentUser?.team?.name }}
+            </a>
+          </div>
+          <div class="mt-6">
+            <a routerLink="/profile" class="block w-full text-center bg-valorant-red hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+              Edit Profile
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="mt-8 bg-gray-800 rounded-lg p-6 border border-gray-700">
+      <h2 class="text-xl font-bold text-white mb-4">Recent Activity</h2>
+      <div class="text-center py-8">
+        <p class="text-gray-400">No recent activity to display</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+/* Material form field styling for dark theme */
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-outline-color: rgb(75, 85, 99);
+  --mdc-outlined-text-field-hover-outline-color: rgb(239, 68, 68);
+  --mdc-outlined-text-field-focus-outline-color: rgb(239, 68, 68);
+  --mdc-outlined-text-field-label-text-color: rgb(156, 163, 175);
+  --mdc-outlined-text-field-input-text-color: rgb(255, 255, 255);
+}

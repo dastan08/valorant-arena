@@ -1,0 +1,95 @@
+<div class="min-h-screen bg-valorant-dark py-8">
+  <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-white">{{ tournament?.name }} - Bracket</h1>
+      <p class="text-gray-400 mt-2">{{ tournament?.format }} Tournament</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-12">
+      <p class="text-gray-400">Loading bracket...</p>
+    </div>
+
+    <!-- Bracket View -->
+    <div *ngIf="!loading && tournament" class="overflow-x-auto">
+      <div class="flex space-x-8 pb-8" style="min-width: max-content;">
+        <!-- Each Round -->
+        <div *ngFor="let round of brackets" class="flex flex-col space-y-4 min-w-[300px]">
+          <!-- Round Header -->
+          <div class="text-center mb-4">
+            <h2 class="text-xl font-bold text-white">{{ getRoundName(round.roundNumber) }}</h2>
+            <p class="text-gray-400 text-sm">Round {{ round.roundNumber }}</p>
+          </div>
+
+          <!-- Matches in Round -->
+          <div class="space-y-8">
+            <div *ngFor="let match of round.matches" 
+                 [class]="'bg-gray-800 rounded-lg border-2 ' + getMatchStatusColor(match.status)">
+              <!-- Match Header -->
+              <div class="px-4 py-2 bg-gray-900 border-b border-gray-700">
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-400 text-sm">Match {{ match.id }}</span>
+                  <span class="text-xs px-2 py-1 rounded" 
+                        [ngClass]="{
+                          'bg-gray-700 text-gray-300': match.status === 'SCHEDULED',
+                          'bg-yellow-600 text-white': match.status === 'IN_PROGRESS',
+                          'bg-green-600 text-white': match.status === 'COMPLETED',
+                          'bg-red-600 text-white': match.status === 'DISPUTED'
+                        }">
+                    {{ match.status }}
+                  </span>
+                </div>
+                <p class="text-gray-400 text-xs mt-1" *ngIf="match.scheduledTime">
+                  {{ match.scheduledTime | date:'short' }}
+                </p>
+              </div>
+
+              <!-- Team 1 -->
+              <div class="px-4 py-3 flex items-center justify-between hover:bg-gray-750 transition-colors"
+                   [class]="getWinnerClass(match, match.team1?.id)">
+                <div class="flex items-center space-x-3 flex-1">
+                  <img [src]="match.team1?.logo || '/assets/default-team.png'" 
+                       alt="Team 1" 
+                       class="w-8 h-8 rounded-full">
+                  <span class="text-white">{{ match.team1?.name || 'TBD' }}</span>
+                </div>
+                <span class="text-xl font-bold text-white ml-4">
+                  {{ match.team1Score !== null ? match.team1Score : '-' }}
+                </span>
+              </div>
+
+              <!-- Divider -->
+              <div class="border-t border-gray-700"></div>
+
+              <!-- Team 2 -->
+              <div class="px-4 py-3 flex items-center justify-between hover:bg-gray-750 transition-colors"
+                   [class]="getWinnerClass(match, match.team2?.id)">
+                <div class="flex items-center space-x-3 flex-1">
+                  <img [src]="match.team2?.logo || '/assets/default-team.png'" 
+                       alt="Team 2" 
+                       class="w-8 h-8 rounded-full">
+                  <span class="text-white">{{ match.team2?.name || 'TBD' }}</span>
+                </div>
+                <span class="text-xl font-bold text-white ml-4">
+                  {{ match.team2Score !== null ? match.team2Score : '-' }}
+                </span>
+              </div>
+
+              <!-- Best Of Info -->
+              <div class="px-4 py-2 bg-gray-900 border-t border-gray-700 text-center">
+                <span class="text-gray-400 text-xs">Best of {{ match.bestOf }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && (!brackets || brackets.length === 0)" 
+         class="text-center py-12">
+      <p class="text-gray-400">Bracket not generated yet</p>
+    </div>
+  </div>
+</div>

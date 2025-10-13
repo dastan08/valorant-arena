@@ -1,0 +1,132 @@
+<div class="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-xl shadow-2xl w-full overflow-hidden border border-gray-700">
+  <!-- Close Button -->
+  <button type="button" (click)="onCancel()" 
+    class="absolute top-4 right-4 z-10 text-valorant-red hover:text-red-400 transition-all duration-200 w-10 h-10 flex items-center justify-center font-bold text-2xl">
+    ✕
+  </button>
+
+  <!-- Header -->
+  <div class="px-8 pt-12 pb-8 text-center">
+    <h2 class="text-3xl font-bold text-white mb-6">Create Your Team</h2>
+    
+    <!-- Progress Steps -->
+    <div class="flex items-center justify-center gap-4 mb-8">
+      <div class="flex items-center">
+        <div class="w-12 h-12 rounded-full bg-valorant-red text-white font-bold text-xl flex items-center justify-center shadow-lg">
+          1
+        </div>
+      </div>
+      <div class="w-12 border-t-2 border-dashed border-valorant-red/50"></div>
+      <div class="w-12 h-12 rounded-full bg-gray-700 text-gray-400 font-bold text-xl flex items-center justify-center">
+        2
+      </div>
+      <div class="w-12 border-t-2 border-dashed border-gray-600"></div>
+      <div class="w-12 h-12 rounded-full bg-gray-700 text-gray-400 font-bold text-xl flex items-center justify-center">
+        3
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <mat-dialog-content class="px-8 pb-6 overflow-y-auto">
+    <form [formGroup]="teamForm" (ngSubmit)="onSubmit()" class="space-y-5">
+      <!-- Error Message -->
+      <div *ngIf="error" class="bg-red-900/20 border border-red-800 text-red-200 p-4 rounded-xl flex items-start animate-shake">
+        <mat-icon class="text-red-400 mr-3 text-xl">error_outline</mat-icon>
+        <div class="flex-1 text-sm">{{ error }}</div>
+      </div>
+
+      <!-- Team Name -->
+      <div>
+        <label class="block text-sm font-medium text-white mb-3 text-center">
+          What's your team name?
+        </label>
+        <input 
+          type="text" 
+          formControlName="name"
+          class="w-full bg-white text-gray-800 rounded-lg px-5 py-4 border-0 focus:ring-2 focus:ring-valorant-red focus:outline-none transition-all duration-200 placeholder:text-gray-400 text-center font-medium shadow-lg"
+          [class.ring-2]="f['name'].touched && f['name'].errors"
+          [class.ring-red-500]="f['name'].touched && f['name'].errors"
+          placeholder="Enter team name">
+        <div *ngIf="f['name'].touched && f['name'].errors" class="mt-2 text-red-300 text-xs text-center">
+          <span *ngIf="f['name'].errors['required']">Team name is required</span>
+          <span *ngIf="f['name'].errors['minlength']">Minimum 3 characters</span>
+          <span *ngIf="f['name'].errors['maxlength']">Maximum 32 characters</span>
+        </div>
+      </div>
+
+      <!-- Team Tag -->
+      <div>
+        <label class="block text-sm font-medium text-white mb-3 text-center">
+          Choose your team tag
+        </label>
+        <input 
+          type="text" 
+          formControlName="tag"
+          class="w-full bg-white text-gray-800 rounded-lg px-5 py-4 border-0 focus:ring-2 focus:ring-valorant-red focus:outline-none transition-all duration-200 uppercase placeholder:text-gray-400 text-center font-bold tracking-wider shadow-lg"
+          [class.ring-2]="f['tag'].touched && f['tag'].errors"
+          [class.ring-red-500]="f['tag'].touched && f['tag'].errors"
+          placeholder="TAG"
+          maxlength="5">
+        <div *ngIf="f['tag'].touched && f['tag'].errors" class="mt-2 text-red-300 text-xs text-center">
+          <span *ngIf="f['tag'].errors['required']">Tag is required</span>
+          <span *ngIf="f['tag'].errors['minlength']">Minimum 2 characters</span>
+        </div>
+      </div>
+
+      <!-- Max Members -->
+      <div>
+        <label class="block text-sm font-medium text-white mb-3 text-center">
+          How many members?
+        </label>
+        <input 
+          type="number" 
+          formControlName="maxMembers"
+          min="2" 
+          max="10"
+          class="w-full bg-white text-gray-800 rounded-lg px-5 py-4 border-0 focus:ring-2 focus:ring-valorant-red focus:outline-none transition-all duration-200 font-bold text-center text-lg shadow-lg"
+          [class.ring-2]="f['maxMembers'].touched && f['maxMembers'].errors"
+          [class.ring-red-500]="f['maxMembers'].touched && f['maxMembers'].errors">
+        <div class="mt-2 text-gray-400 text-xs text-center">2-10 members</div>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label class="block text-sm font-medium text-white mb-3 text-center">
+          Tell us about your team <span class="text-gray-400 text-xs">(Optional)</span>
+        </label>
+        <textarea 
+          formControlName="description"
+          class="w-full bg-white text-gray-800 rounded-lg px-5 py-4 border-0 focus:ring-2 focus:ring-valorant-red focus:outline-none transition-all duration-200 min-h-[100px] resize-none placeholder:text-gray-400 shadow-lg"
+          placeholder="Describe your team...">
+        </textarea>
+        <div class="flex justify-between items-center mt-2 px-2">
+          <div class="text-gray-400 text-xs">
+            {{ f['description'].value?.length || 0 }}/500
+          </div>
+          <div *ngIf="f['description'].value?.length > 450" class="text-red-300 text-xs">
+            {{ 500 - (f['description'].value?.length || 0) }} left
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Button -->
+      <div class="pt-6 pb-4">
+        <button 
+          type="button"
+          [disabled]="teamForm.invalid || loading"
+          (click)="onSubmit()"
+          class="w-full bg-gradient-to-r from-valorant-red to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold px-8 py-4 rounded-lg text-base transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl flex items-center justify-center">
+          <span *ngIf="!loading" class="flex items-center justify-center">
+            <span>Continue</span>
+            <span class="ml-2 text-xl">→</span>
+          </span>
+          <span *ngIf="loading" class="flex items-center justify-center">
+            <mat-spinner diameter="20" strokeWidth="3"></mat-spinner>
+            <span class="ml-2">Creating...</span>
+          </span>
+        </button>
+      </div>
+    </form>
+  </mat-dialog-content>
+</div>

@@ -1,0 +1,279 @@
+<div class="min-h-screen bg-valorant-dark py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-12">
+      <p class="text-gray-400">Loading tournament...</p>
+    </div>
+
+    <!-- Tournament Content -->
+    <div *ngIf="!loading && tournament" class="space-y-6">
+      <!-- Header -->
+      <div class="bg-gray-800 rounded-lg overflow-hidden border border-gray-700">
+        <!-- Banner -->
+        <div class="h-64 bg-gradient-to-r from-valorant-red to-red-700 relative">
+          <img *ngIf="tournament.banner && tournament.banner.startsWith('http')" 
+               [src]="tournament.banner" 
+               alt="Tournament Banner" 
+               class="w-full h-full object-cover">
+          <img *ngIf="tournament.banner && !tournament.banner.startsWith('http')" 
+               [src]="'http://localhost:8080' + tournament.banner" 
+               alt="Tournament Banner" 
+               class="w-full h-full object-cover">
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-gray-900 to-transparent p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <h1 class="text-4xl font-bold text-white mb-2">{{ tournament.name }}</h1>
+                <span [class]="getStatusBadgeColor(tournament.status)" 
+                      class="px-3 py-1 rounded-full text-sm font-semibold text-white">
+                  {{ tournament.status }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Info -->
+        <div class="p-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="text-center">
+            <p class="text-gray-400 text-sm">Prize Pool</p>
+            <p class="text-2xl font-bold text-green-500">${{ tournament.prizePool }}</p>
+          </div>
+          <div class="text-center">
+            <p class="text-gray-400 text-sm">Entry Fee</p>
+            <p class="text-2xl font-bold text-white">${{ tournament.entryFee }}</p>
+          </div>
+          <div class="text-center">
+            <p class="text-gray-400 text-sm">Format</p>
+            <p class="text-xl font-bold text-white">{{ tournament.format }}</p>
+          </div>
+          <div class="text-center">
+            <p class="text-gray-400 text-sm">Teams</p>
+            <p class="text-2xl font-bold text-white">
+              {{ tournament.registeredTeams?.length || 0 }}/{{ tournament.maxTeams }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Column - Details -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Description -->
+          <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+            <h2 class="text-2xl font-bold text-white mb-4">About</h2>
+            <p class="text-gray-300 whitespace-pre-wrap">{{ tournament.description }}</p>
+          </div>
+
+          <!-- Rules -->
+          <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+            <h2 class="text-2xl font-bold text-white mb-4">Rules</h2>
+            <div class="text-gray-300 whitespace-pre-wrap">{{ tournament.rules }}</div>
+          </div>
+
+          <!-- Registered Teams -->
+          <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+            <h2 class="text-2xl font-bold text-white mb-6">
+              Registered Teams ({{ tournament.registeredTeams?.length || 0 }})
+            </h2>
+            
+            <!-- Teams Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div *ngFor="let team of tournament.registeredTeams" 
+                   (click)="navigateToTeam(team.id)"
+                   class="flex flex-col items-center p-4 bg-gray-900/50 hover:bg-gray-900 rounded-lg border border-gray-700 hover:border-valorant-red transition-all cursor-pointer group">
+                <!-- Team Logo -->
+                <div class="w-16 h-16 rounded-lg overflow-hidden border-2 border-gray-700 group-hover:border-valorant-red transition-colors mb-3 bg-gray-800">
+                  <!-- Show uploaded logo if exists -->
+                  <img *ngIf="team.logo && team.logo !== 'default-team-logo.png'" 
+                       [src]="'http://localhost:8080/uploads/' + team.logo" 
+                       [alt]="team.name"
+                       class="w-full h-full object-cover"
+                       (error)="onImageError($event, team)">
+                  
+                  <!-- Show default team avatar if no logo -->
+                  <div *ngIf="!team.logo || team.logo === 'default-team-logo.png'" 
+                       class="w-full h-full bg-gradient-to-br from-valorant-red to-pink-600 flex items-center justify-center">
+                    <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
+                    </svg>
+                  </div>
+                </div>
+                
+                <!-- Team Info -->
+                <div class="text-center w-full">
+                  <p class="text-white font-bold text-sm group-hover:text-valorant-red transition-colors truncate">
+                    {{ team.name }}
+                  </p>
+                  <span class="text-gray-500 text-xs font-mono">
+                    [{{ team.tag }}]
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Empty State -->
+            <div *ngIf="!tournament.registeredTeams || tournament.registeredTeams.length === 0" 
+                 class="text-center py-12 text-gray-500">
+              <svg class="w-16 h-16 mx-auto mb-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+              <p class="text-lg font-semibold">No teams registered yet</p>
+              <p class="text-sm mt-2">Be the first to register!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column - Actions & Info -->
+        <div class="space-y-6">
+          <!-- Registration Card -->
+          <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+            <h3 class="text-xl font-bold text-white mb-4">Registration</h3>
+            
+            <div class="space-y-4">
+              <div>
+                <p class="text-gray-400 text-sm">Registration Deadline</p>
+                <p class="text-white font-semibold">
+                  {{ tournament.registrationDeadline | date:'medium' }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-gray-400 text-sm">Tournament Start</p>
+                <p class="text-white font-semibold">
+                  {{ tournament.startDate | date:'medium' }}
+                </p>
+              </div>
+
+              <!-- Registration Button -->
+              <button *ngIf="canRegister && !isRegistered"
+                      (click)="register()"
+                      [disabled]="registering"
+                      class="w-full bg-valorant-red hover:bg-red-600 text-white font-bold py-3 px-4 rounded transition-colors disabled:opacity-50">
+                {{ registering ? 'Registering...' : 'Register Now' }}
+              </button>
+
+              <button *ngIf="isRegistered"
+                      (click)="unregister()"
+                      class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded transition-colors">
+                Unregister
+              </button>
+
+              <div *ngIf="!canRegister && !isRegistered" 
+                   class="w-full bg-gray-700 text-gray-400 font-bold py-3 px-4 rounded text-center">
+                Registration Closed
+              </div>
+
+              <div *ngIf="isRegistered" 
+                   class="flex items-center justify-center space-x-2 text-green-500">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <span class="font-semibold">You are registered</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bracket Button -->
+          <button *ngIf="tournament.status === 'IN_PROGRESS' || tournament.status === 'ONGOING' || tournament.status === 'COMPLETED'"
+                  (click)="viewBracket()"
+                  class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded transition-colors">
+            View Bracket
+          </button>
+
+          <!-- Tournament Info -->
+          <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+            <h3 class="text-xl font-bold text-white mb-4">Tournament Info</h3>
+            <div class="space-y-3">
+              <div>
+                <p class="text-gray-400 text-sm">Organizer</p>
+                <p class="text-white font-semibold">{{ tournament.organizer?.name || 'Unknown' }}</p>
+              </div>
+              <div>
+                <p class="text-gray-400 text-sm">Created</p>
+                <p class="text-white">{{ tournament.createdAt | date:'short' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="!loading && !tournament" class="text-center py-12">
+      <p class="text-gray-400">Tournament not found</p>
+      <button (click)="router.navigate(['/tournaments'])" 
+              class="mt-4 bg-valorant-red hover:bg-red-600 text-white font-bold py-2 px-6 rounded">
+        Back to Tournaments
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Registration Modal -->
+<div *ngIf="showRegistrationModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+  <div class="bg-gray-800 rounded-lg p-8 max-w-md w-full mx-4 border border-gray-700">
+    <h2 class="text-2xl font-bold text-white mb-6">Register for Tournament</h2>
+    
+    <!-- Registration Type Selection -->
+    <div class="space-y-4 mb-6">
+      <button (click)="registerAsSolo()" 
+              class="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors text-left">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-lg">Register as Solo</div>
+            <div class="text-sm text-gray-400">Individual player registration</div>
+          </div>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+        </div>
+      </button>
+      
+      <div class="border-t border-gray-700 pt-4">
+        <div class="text-white font-semibold mb-3">Register as Team</div>
+        
+        <div *ngIf="loadingTeams" class="text-center py-4 text-gray-400">
+          Loading your teams...
+        </div>
+        
+        <div *ngIf="!loadingTeams && userTeams.length === 0" class="text-center py-4 text-gray-400">
+          You don't have any teams yet. Create a team first!
+        </div>
+        
+        <div *ngIf="!loadingTeams && userTeams.length > 0" class="space-y-2">
+          <div *ngFor="let team of userTeams" 
+               (click)="selectedTeamId = team.id"
+               [class.bg-valorant-red]="selectedTeamId === team.id"
+               [class.bg-gray-700]="selectedTeamId !== team.id"
+               class="p-4 rounded-lg cursor-pointer hover:bg-opacity-80 transition-colors">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-white font-semibold">{{ team.name }}</div>
+                <div class="text-sm text-gray-300">[{{ team.tag }}]</div>
+              </div>
+              <div *ngIf="selectedTeamId === team.id" class="text-white">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="flex space-x-4">
+      <button (click)="closeRegistrationModal()" 
+              class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded transition-colors">
+        Cancel
+      </button>
+      <button (click)="registerAsTeam()" 
+              [disabled]="!selectedTeamId || registering"
+              class="flex-1 bg-valorant-red hover:bg-red-600 text-white font-bold py-3 px-4 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        {{ registering ? 'Registering...' : 'Register Team' }}
+      </button>
+    </div>
+  </div>
+</div>

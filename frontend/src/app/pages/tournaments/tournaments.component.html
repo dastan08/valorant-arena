@@ -1,0 +1,66 @@
+<div class="min-h-screen bg-valorant-dark py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-white">Tournaments</h1>
+      <p class="text-gray-400 mt-2">Browse and join competitive tournaments</p>
+    </div>
+
+    <div *ngIf="loading" class="text-center py-12">
+      <p class="text-gray-400">Loading tournaments...</p>
+    </div>
+
+    <div *ngIf="!loading && tournaments.length === 0" class="text-center py-12">
+      <p class="text-gray-400">No tournaments available at the moment.</p>
+    </div>
+
+    <div *ngIf="!loading && tournaments.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let tournament of tournaments" class="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-valorant-red transition-colors">
+        <!-- Banner Image -->
+        <div class="relative h-32 bg-gradient-to-r from-valorant-red to-red-700 overflow-hidden">
+          <img *ngIf="tournament.bannerUrl || tournament.banner" 
+               [src]="'http://localhost:8080' + (tournament.bannerUrl || tournament.banner)" 
+               [alt]="tournament.name"
+               class="w-full h-full object-cover">
+        </div>
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xl font-bold text-white">{{ tournament.name }}</h3>
+            <span [class]="getStatusColor(tournament.status)" class="text-sm font-semibold">
+              {{ tournament.status }}
+            </span>
+          </div>
+          <p class="text-gray-400 text-sm mb-4 line-clamp-2">{{ tournament.description }}</p>
+          
+          <div class="space-y-2 mb-4">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-400">Format:</span>
+              <span class="text-white">{{ tournament.format }}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-400">Prize Pool:</span>
+              <span class="text-green-500 font-semibold">${{ tournament.prizePool }}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-400">Entry Fee:</span>
+              <span class="text-white">${{ tournament.entryFee }}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-400">Teams:</span>
+              <span class="text-white">{{ tournament.registeredTeams?.length || 0 }}/{{ tournament.maxTeams }}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-400">Start Date:</span>
+              <span class="text-white">{{ tournament.startDate | date:'short' }}</span>
+            </div>
+          </div>
+
+          <button 
+            (click)="viewTournamentDetails(tournament.id)" 
+            class="w-full bg-valorant-red hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-colors">
+            View Details
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

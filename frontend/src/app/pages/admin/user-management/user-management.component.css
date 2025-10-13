@@ -1,0 +1,71 @@
+/* Material table styling */
+.mat-mdc-table {
+  background: transparent;
+  color: white;
+}
+
+.mat-mdc-header-cell {
+  background-color: rgb(55, 65, 81) !important;
+  color: rgb(209, 213, 219) !important;
+  font-weight: 600;
+  border-bottom: 1px solid rgb(75, 85, 99);
+}
+
+.mat-mdc-cell {
+  color: rgb(229, 231, 235);
+  border-bottom: 1px solid rgb(55, 65, 81);
+}
+
+.mat-mdc-row:hover {
+  background-color: rgba(55, 65, 81, 0.3) !important;
+}
+
+/* Material form field styling */
+.mat-mdc-form-field {
+  --mdc-filled-text-field-container-color: rgb(55, 65, 81);
+  --mdc-filled-text-field-label-text-color: rgb(156, 163, 175);
+  --mdc-filled-text-field-input-text-color: rgb(255, 255, 255);
+  --mdc-outlined-text-field-outline-color: rgb(75, 85, 99);
+  --mdc-outlined-text-field-hover-outline-color: rgb(99, 102, 241);
+  --mdc-outlined-text-field-focus-outline-color: rgb(99, 102, 241);
+  --mdc-outlined-text-field-label-text-color: rgb(156, 163, 175);
+  --mdc-outlined-text-field-input-text-color: rgb(255, 255, 255);
+}
+
+/* Paginator styling */
+.mat-mdc-paginator {
+  background: transparent !important;
+  color: white !important;
+}
+
+.mat-mdc-paginator .mat-mdc-select-value,
+.mat-mdc-paginator .mat-mdc-select-arrow {
+  color: white !important;
+}
+
+.mat-mdc-paginator .mat-mdc-icon-button {
+  color: white !important;
+}
+
+.mat-mdc-paginator .mat-mdc-icon-button:disabled {
+  color: rgb(107, 114, 128) !important;
+}
+
+/* Custom scrollbar */
+.overflow-x-auto::-webkit-scrollbar {
+  height: 8px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: rgba(55, 65, 81, 0.3);
+  border-radius: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.5);
+  border-radius: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.7);
+}

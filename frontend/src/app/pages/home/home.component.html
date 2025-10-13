@@ -1,0 +1,196 @@
+<!-- Hero Section -->
+<div class="relative min-h-screen overflow-hidden bg-gradient-to-br from-valorant-darker via-valorant-dark to-gray-900">
+  <!-- Animated Background -->
+  <div class="absolute inset-0 opacity-20">
+    <div class="absolute top-0 left-0 w-96 h-96 bg-valorant-red rounded-full filter blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-blue-500 rounded-full filter blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+  </div>
+
+  <!-- Hero Content -->
+  <div class="relative z-10 flex items-center justify-center min-h-screen px-4">
+    <div class="text-center max-w-6xl mx-auto">
+      <!-- Main Heading -->
+      <div class="animate-fadeInUp">
+        <h1 class="heading-xl text-white mb-4" data-text="VALORANT ARENA">
+          <span class="block">VALORANT</span>
+          <span class="block text-transparent bg-clip-text bg-gradient-to-r from-valorant-red via-red-500 to-pink-500">
+            ARENA
+          </span>
+        </h1>
+      </div>
+
+      <!-- Subheading -->
+      <p class="text-xl md:text-2xl text-gray-300 mb-8 animate-fadeInUp font-light tracking-wide" style="animation-delay: 0.2s;">
+        COMPETE. DOMINATE. CONQUER.
+      </p>
+
+      <p class="text-base md:text-lg text-gray-400 mb-12 max-w-3xl mx-auto animate-fadeInUp" style="animation-delay: 0.3s;">
+        Join the ultimate competitive platform for VALORANT. Create teams, participate in tournaments, 
+        track your stats, and climb the ranks to become a legend.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fadeInUp" style="animation-delay: 0.4s;">
+        <a routerLink="/register" class="btn-primary group relative overflow-hidden">
+          <span class="relative z-10">START YOUR JOURNEY</span>
+          <div class="absolute inset-0 bg-gradient-to-r from-red-600 to-pink-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+        </a>
+        <a (click)="navigateToTournaments()" class="btn-secondary cursor-pointer">
+          VIEW TOURNAMENTS
+        </a>
+      </div>
+
+      <!-- Stats Bar -->
+      <div class="mt-16 grid grid-cols-3 gap-8 max-w-4xl mx-auto animate-fadeInUp" style="animation-delay: 0.5s;">
+        <div class="text-center">
+          <div class="text-4xl font-bold text-valorant-red mb-2">1000+</div>
+          <div class="text-sm text-gray-400 uppercase tracking-wider">Players</div>
+        </div>
+        <div class="text-center border-l border-r border-gray-700">
+          <div class="text-4xl font-bold text-valorant-red mb-2">50+</div>
+          <div class="text-sm text-gray-400 uppercase tracking-wider">Tournaments</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold text-valorant-red mb-2">$10K+</div>
+          <div class="text-sm text-gray-400 uppercase tracking-wider">Prize Pool</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll Indicator -->
+  <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+    </svg>
+  </div>
+</div>
+
+<!-- Features Section -->
+<div class="py-24 bg-black relative overflow-hidden">
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 opacity-5">
+    <div class="absolute inset-0" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,70,85,.1) 35px, rgba(255,70,85,.1) 70px);"></div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <!-- Section Header -->
+    <div class="text-center mb-16">
+      <div class="text-valorant-red text-sm font-bold tracking-widest uppercase mb-4">FEATURES</div>
+      <h2 class="heading-lg text-white mb-4">
+        BUILT FOR CHAMPIONS
+      </h2>
+      <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+        Everything you need to dominate the competitive scene
+      </p>
+    </div>
+
+    <!-- Feature Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Tournament Card -->
+      <div class="card-gaming p-8 group">
+        <div class="w-16 h-16 bg-gradient-to-br from-valorant-red to-pink-600 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+          </svg>
+        </div>
+        <h3 class="heading-md text-white mb-3">TOURNAMENTS</h3>
+        <p class="text-gray-400 leading-relaxed">
+          Compete in various formats: Single/Double Elimination, Round Robin, and Swiss System. Win prizes and climb the ranks.
+        </p>
+      </div>
+
+      <!-- Team Management Card -->
+      <div class="card-gaming p-8 group">
+        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+        </div>
+        <h3 class="heading-md text-white mb-3">TEAM MANAGEMENT</h3>
+        <p class="text-gray-400 leading-relaxed">
+          Build your dream team. Invite players, manage rosters, and coordinate strategies to dominate the competition.
+        </p>
+      </div>
+
+      <!-- Stats Card -->
+      <div class="card-gaming p-8 group">
+        <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+        </div>
+        <h3 class="heading-md text-white mb-3">STATS & RANKINGS</h3>
+        <p class="text-gray-400 leading-relaxed">
+          Track performance with detailed stats. Monitor K/D, win rate, and climb the global ELO leaderboard.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Upcoming Tournaments Section -->
+<div class="py-24 bg-gradient-to-br from-valorant-dark to-valorant-darker relative">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section Header -->
+    <div class="text-center mb-16">
+      <div class="text-valorant-red text-sm font-bold tracking-widest uppercase mb-4">COMPETE</div>
+      <h2 class="heading-lg text-white mb-4">
+        UPCOMING TOURNAMENTS
+      </h2>
+      <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+        Join the battle and prove your worth
+      </p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-valorant-red"></div>
+      <p class="text-gray-400 mt-4">Loading tournaments...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && upcomingTournaments.length === 0" class="text-center py-12">
+      <svg class="w-24 h-24 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <p class="text-gray-400 text-lg">No upcoming tournaments at the moment</p>
+      <p class="text-gray-500 text-sm mt-2">Check back soon for new competitions!</p>
+    </div>
+
+    <!-- Tournament Cards -->
+    <div *ngIf="!loading && upcomingTournaments.length > 0" class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div *ngFor="let tournament of upcomingTournaments" class="card-gaming p-6 group">
+        <!-- Tournament Header -->
+        <div class="mb-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-valorant-red uppercase tracking-wider">Live</span>
+            <span class="text-xs text-gray-500">{{ tournament.registeredTeams?.length || 0 }}/{{ tournament.maxTeams || tournament.maxParticipants || 0 }} Teams</span>
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-2 group-hover:text-valorant-red transition-colors">
+            {{ tournament.name }}
+          </h3>
+          <p class="text-gray-400 text-sm line-clamp-2">{{ tournament.description }}</p>
+        </div>
+
+        <!-- Prize Pool -->
+        <div class="bg-gradient-to-r from-valorant-red/20 to-pink-600/20 border border-valorant-red/30 rounded-lg p-4 mb-4">
+          <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">Prize Pool</div>
+          <div class="text-2xl font-bold text-white">${{ tournament.prizePool }}</div>
+        </div>
+
+        <!-- CTA Button -->
+        <a routerLink="/tournaments" class="block w-full text-center bg-gradient-to-r from-valorant-red to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-bold py-3 px-4 uppercase tracking-wider transition-all transform hover:scale-105">
+          View Details
+        </a>
+      </div>
+    </div>
+
+    <!-- View All Button -->
+    <div class="text-center mt-12" *ngIf="!loading && upcomingTournaments.length > 0">
+      <a routerLink="/tournaments" class="btn-secondary inline-block">
+        VIEW ALL TOURNAMENTS
+      </a>
+    </div>
+  </div>
+</div>

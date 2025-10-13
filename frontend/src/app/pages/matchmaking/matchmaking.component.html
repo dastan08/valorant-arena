@@ -1,0 +1,148 @@
+<div class="min-h-screen bg-valorant-dark py-12">
+  <div class="max-w-4xl mx-auto px-4">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-5xl font-bold text-white mb-2 uppercase tracking-wider">Matchmaking</h1>
+      <p class="text-gray-400 text-lg">Find players of similar skill level</p>
+    </div>
+
+    <!-- Queue Stats -->
+    <div *ngIf="queueStats && !inQueue" class="bg-gray-800 rounded-lg p-6 mb-6 border-2 border-gray-700">
+      <div class="grid grid-cols-2 gap-6">
+        <div class="text-center">
+          <p class="text-gray-400 text-sm uppercase tracking-wider mb-2">Players in Queue</p>
+          <p class="text-4xl font-bold text-valorant-red">{{ queueStats.playersInQueue }}</p>
+        </div>
+        <div class="text-center">
+          <p class="text-gray-400 text-sm uppercase tracking-wider mb-2">Estimated Wait</p>
+          <p class="text-4xl font-bold text-white">{{ queueStats.estimatedWaitTime }}s</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Region Selection (when not in queue) -->
+    <div *ngIf="!inQueue" class="bg-gray-800 rounded-lg p-6 mb-6 border-2 border-gray-700">
+      <label class="block text-gray-400 text-sm uppercase tracking-wider mb-3">Select Region</label>
+      <select [(ngModel)]="selectedRegion" 
+              class="w-full bg-gray-900 text-white border-2 border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:border-valorant-red transition-colors">
+        <option value="NA">North America</option>
+        <option value="EU">Europe</option>
+        <option value="ASIA">Asia</option>
+        <option value="SEA">Southeast Asia</option>
+      </select>
+    </div>
+
+    <!-- Queue Button -->
+    <div *ngIf="!inQueue" class="text-center">
+      <button (click)="joinQueue()" 
+              class="bg-gradient-to-r from-valorant-red to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-16 py-5 text-2xl font-bold uppercase tracking-wider transition-all transform hover:scale-105 rounded-lg shadow-lg hover:shadow-valorant-red/50">
+        <svg class="w-8 h-8 inline-block mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        Find Match
+      </button>
+    </div>
+
+    <!-- In Queue -->
+    <div *ngIf="inQueue && queueStatus" class="bg-gray-800 rounded-lg p-8 border-2 border-valorant-red shadow-lg shadow-valorant-red/20">
+      <div class="text-center mb-8">
+        <!-- Animated Search Icon -->
+        <div class="relative inline-block mb-6">
+          <div class="animate-ping absolute inline-flex h-20 w-20 rounded-full bg-valorant-red opacity-75"></div>
+          <div class="relative inline-flex rounded-full h-20 w-20 bg-gradient-to-r from-valorant-red to-pink-600 items-center justify-center">
+            <svg class="w-10 h-10 text-white animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+        </div>
+        
+        <h2 class="text-3xl font-bold text-white mb-3 uppercase tracking-wider">Searching for Match...</h2>
+        <div class="inline-block bg-gradient-to-r from-valorant-red to-pink-600 text-white px-6 py-2 rounded-full text-lg font-bold">
+          {{ queueStatus.playerRank }} • {{ queueStatus.playerElo }} ELO
+        </div>
+      </div>
+
+      <!-- Queue Info -->
+      <div class="space-y-4 mb-6">
+        <div class="bg-gray-900 rounded-lg p-4 flex justify-between items-center">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-valorant-red mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="text-gray-400">Time in Queue</span>
+          </div>
+          <span class="text-white font-bold text-lg">{{ getWaitTime() }}</span>
+        </div>
+        
+        <div class="bg-gray-900 rounded-lg p-4 flex justify-between items-center">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-valorant-red mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+            <span class="text-gray-400">Estimated Wait</span>
+          </div>
+          <span class="text-white font-bold text-lg">~{{ queueStatus.estimatedWaitTime }}s</span>
+        </div>
+
+        <div class="bg-gray-900 rounded-lg p-4 flex justify-between items-center">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-valorant-red mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="text-gray-400">Region</span>
+          </div>
+          <span class="text-white font-bold text-lg">{{ selectedRegion }}</span>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="mb-6">
+        <div class="h-2 bg-gray-700 rounded-full overflow-hidden">
+          <div class="h-full bg-gradient-to-r from-valorant-red to-pink-600 animate-pulse" 
+               [style.width.%]="(queueStatus.estimatedWaitTime > 0 ? Math.min(100, (getWaitTimeSeconds() / queueStatus.estimatedWaitTime) * 100) : 0)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Cancel Button -->
+      <button (click)="leaveQueue()" 
+              class="w-full bg-gray-700 hover:bg-gray-600 text-white px-6 py-4 rounded-lg transition-colors font-bold uppercase tracking-wider">
+        <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+        Cancel Search
+      </button>
+    </div>
+
+    <!-- Tips -->
+    <div *ngIf="!inQueue" class="mt-8 bg-gray-800 rounded-lg p-6 border-2 border-gray-700">
+      <h3 class="text-xl font-bold text-white mb-4 uppercase tracking-wider">Matchmaking Tips</h3>
+      <ul class="space-y-3 text-gray-400">
+        <li class="flex items-start">
+          <svg class="w-5 h-5 text-valorant-red mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          <span>You'll be matched with players of similar ELO rating (±100 initially)</span>
+        </li>
+        <li class="flex items-start">
+          <svg class="w-5 h-5 text-valorant-red mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          <span>Search range expands by ±50 ELO every minute to find matches faster</span>
+        </li>
+        <li class="flex items-start">
+          <svg class="w-5 h-5 text-valorant-red mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          <span>Teams are automatically balanced for fair matches</span>
+        </li>
+        <li class="flex items-start">
+          <svg class="w-5 h-5 text-valorant-red mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          <span>Win matches to increase your ELO and rank up!</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

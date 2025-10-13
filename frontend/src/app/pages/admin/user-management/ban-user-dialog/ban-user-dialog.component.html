@@ -1,0 +1,86 @@
+<div class="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-xl shadow-2xl w-full overflow-hidden border border-red-700/50">
+  <!-- Close Button -->
+  <button type="button" (click)="onCancel()" 
+    class="absolute top-4 right-4 z-10 text-valorant-red hover:text-red-400 transition-all duration-200 w-10 h-10 flex items-center justify-center font-bold text-2xl">
+    ✕
+  </button>
+
+  <!-- Header -->
+  <div class="px-8 pt-12 pb-8 text-center">
+    <div class="flex items-center justify-center mb-4">
+      <div class="w-16 h-16 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center shadow-lg">
+        <mat-icon class="text-white text-3xl">block</mat-icon>
+      </div>
+    </div>
+    <h2 class="text-3xl font-bold text-white mb-2">Ban User</h2>
+    <p class="text-gray-400">{{ user.username }}</p>
+  </div>
+
+  <!-- Content -->
+  <mat-dialog-content class="px-8 pb-6 overflow-y-auto">
+    <!-- Warning Message -->
+    <div class="mb-6 p-4 bg-red-900/20 border border-red-700/50 rounded-lg flex items-start">
+      <mat-icon class="text-red-400 mr-3 text-xl">warning</mat-icon>
+      <div class="flex-1">
+        <p class="text-red-300 text-sm font-medium">Warning</p>
+        <p class="text-red-400 text-xs mt-1">This action will prevent the user from accessing the platform.</p>
+      </div>
+    </div>
+
+    <form [formGroup]="banForm" (ngSubmit)="onBan()" class="space-y-5">
+      <!-- Ban Reason -->
+      <div>
+        <label class="block text-sm font-medium text-white mb-2">
+          Ban Reason
+        </label>
+        <textarea 
+          formControlName="reason"
+          rows="4"
+          class="w-full bg-white text-gray-800 rounded-lg px-4 py-3 border-0 focus:ring-2 focus:ring-red-500 focus:outline-none transition-all duration-200 placeholder:text-gray-400 resize-none shadow-lg"
+          [class.ring-2]="banForm.get('reason')?.touched && banForm.get('reason')?.errors"
+          [class.ring-red-500]="banForm.get('reason')?.touched && banForm.get('reason')?.errors"
+          placeholder="Explain why this user is being banned..."></textarea>
+        <div class="flex justify-between items-center mt-2">
+          <div *ngIf="banForm.get('reason')?.touched && banForm.get('reason')?.errors" class="text-red-300 text-xs">
+            <span *ngIf="banForm.get('reason')?.hasError('required')">Ban reason is required</span>
+            <span *ngIf="banForm.get('reason')?.hasError('minlength')">Minimum 10 characters required</span>
+          </div>
+          <div class="text-gray-400 text-xs ml-auto">
+            {{ banForm.get('reason')?.value?.length || 0 }}/500
+          </div>
+        </div>
+      </div>
+
+      <!-- Ban Duration -->
+      <div>
+        <label class="block text-sm font-medium text-white mb-2">
+          Ban Duration
+        </label>
+        <select 
+          formControlName="duration"
+          class="w-full bg-white text-gray-800 rounded-lg px-4 py-3 border-0 focus:ring-2 focus:ring-red-500 focus:outline-none transition-all duration-200 font-medium shadow-lg cursor-pointer">
+          <option *ngFor="let duration of banDurations" [value]="duration.value">
+            {{ duration.label }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex gap-3 pt-4">
+        <button 
+          type="button"
+          (click)="onCancel()"
+          class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold px-6 py-3 rounded-lg transition-all duration-200 shadow-lg">
+          Cancel
+        </button>
+        <button 
+          type="submit"
+          [disabled]="banForm.invalid"
+          class="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-6 py-3 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl flex items-center justify-center">
+          <mat-icon class="mr-2">block</mat-icon>
+          <span>Ban User</span>
+        </button>
+      </div>
+    </form>
+  </mat-dialog-content>
+</div>

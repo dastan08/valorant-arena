@@ -1,0 +1,18 @@
+/* Matchmaking specific styles */
+.bg-valorant-dark {
+  background-color: #0f1923;
+}
+
+/* Pulsing animation for search */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 70, 85, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 70, 85, 0.8);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}

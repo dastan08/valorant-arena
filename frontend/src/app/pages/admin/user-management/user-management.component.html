@@ -1,0 +1,216 @@
+<div class="min-h-screen bg-gray-900 text-white">
+  <!-- Header -->
+  <div class="bg-gray-800 border-b border-gray-700 px-8 py-4">
+    <div class="flex items-center justify-between max-w-7xl mx-auto">
+      <div>
+        <h1 class="text-2xl font-bold text-white">User Management</h1>
+        <p class="text-sm text-gray-400">Manage platform users and permissions</p>
+      </div>
+      <button routerLink="/admin" class="text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-700 transition-colors" title="Back to Dashboard">
+        <i class="fa-solid fa-arrow-left text-lg" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="p-6 bg-gray-800 border-b border-gray-700">
+    <div class="flex items-center space-x-3 max-w-7xl mx-auto">
+      <div class="flex-1 max-w-md relative">
+        <input type="text"
+               [(ngModel)]="searchTerm" 
+               (keyup.enter)="onSearch()"
+               placeholder="Search users..."
+               class="w-full bg-gray-700 text-white px-4 py-2 pl-10 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-400" aria-hidden="true"></i>
+      </div>
+      <button (click)="onSearch()"
+              [disabled]="loading"
+              class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50">
+        Search
+      </button>
+      <button (click)="searchTerm = ''; onSearch()"
+              [disabled]="loading"
+              class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-colors disabled:opacity-50">
+        Clear
+      </button>
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <div class="p-6 max-w-7xl mx-auto">
+    <div class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+      <!-- Table Header -->
+      <div class="px-6 py-4 bg-gray-750 border-b border-gray-700">
+        <h3 class="text-lg font-semibold text-white">
+          Users ({{ totalUsers | number }})
+        </h3>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="flex items-center justify-center py-12">
+        <mat-spinner diameter="50" color="accent"></mat-spinner>
+      </div>
+
+      <!-- Users Table -->
+      <div *ngIf="!loading" class="overflow-x-auto">
+        <table mat-table [dataSource]="users" class="w-full">
+          <!-- Avatar Column -->
+          <ng-container matColumnDef="avatar">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-700 text-gray-300 font-semibold">Avatar</th>
+            <td mat-cell *matCellDef="let user" class="py-4">
+              <div class="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center overflow-hidden">
+                <!-- Discord Avatar -->
+                <img *ngIf="user.discordId && user.discordAvatar" 
+                     [src]="'https://cdn.discordapp.com/avatars/' + user.discordId + '/' + user.discordAvatar + '.png'" 
+                     [alt]="user.username"
+                     class="w-full h-full object-cover"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                <!-- Default Icon -->
+                <mat-icon [class.hidden]="user.discordId && user.discordAvatar" class="text-gray-400">person</mat-icon>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Username Column -->
+          <ng-container matColumnDef="username">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-700 text-gray-300 font-semibold">Username</th>
+            <td mat-cell *matCellDef="let user" class="py-4">
+              <div class="flex items-center space-x-2">
+                <span class="font-medium text-white">{{ user.username }}</span>
+                <span *ngIf="user.isVerified" class="text-blue-400 text-xs" title="Verified">
+                  <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                </span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Email Column -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-700 text-gray-300 font-semibold">Email</th>
+            <td mat-cell *matCellDef="let user" class="py-4">
+              <span class="text-gray-300">{{ user.email }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Role Column -->
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-700 text-gray-300 font-semibold">Role</th>
+            <td mat-cell *matCellDef="let user" class="py-4">
+              <span class="px-2 py-1 rounded-full text-xs font-medium" [class]="getRoleClass(user.role)">
+                {{ user.role }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Team Column -->
+          <ng-container matColumnDef="team">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-700 text-gray-300 font-semibold">Team</th>
+            <td mat-cell *matCellDef="let user" class="py-4">
+              <div *ngIf="user.team" class="flex items-center">
+                <span class="text-white">{{ user.team.name }}</span>
+                <span class="ml-2 text-xs text-gray-400">[{{ user.team.tag }}]</span>
+              </div>
+              <span *ngIf="!user.team" class="text-gray-500">No team</span>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-700 text-gray-300 font-semibold">Status</th>
+            <td mat-cell *matCellDef="let user" class="py-4">
+              <span class="px-2 py-1 rounded-full text-xs font-medium" [class]="getStatusClass(user.status)">
+                {{ user.status }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Created At Column -->
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-700 text-gray-300 font-semibold">Joined</th>
+            <td mat-cell *matCellDef="let user" class="py-4">
+              <span class="text-gray-300">{{ user.createdAt | date:'short' }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-700 text-gray-300 font-semibold">Actions</th>
+            <td mat-cell *matCellDef="let user" class="py-4">
+              <div class="flex items-center space-x-1">
+                <button (click)="viewUser(user)"
+                        class="px-3 py-1 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+                        title="View Details">
+                  view
+                </button>
+                
+                <button *ngIf="user.status !== 'BANNED'" 
+                        (click)="banUser(user)"
+                        class="px-3 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
+                        title="Ban User">
+                  ban
+                </button>
+                
+                <button *ngIf="user.status === 'BANNED'" 
+                        (click)="unbanUser(user)"
+                        class="px-3 py-1 text-xs bg-green-600 hover:bg-green-700 text-white rounded transition-colors"
+                        title="Unban User">
+                  unban
+                </button>
+                
+                <button (click)="deleteUser(user)"
+                        class="px-3 py-1 text-xs bg-gray-600 hover:bg-gray-700 text-white rounded transition-colors"
+                        title="Delete User">
+                  delete
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-gray-700/30 transition-colors"></tr>
+        </table>
+
+        <!-- No Data State -->
+        <div *ngIf="users.length === 0" class="text-center py-12 text-gray-400">
+          <mat-icon class="text-6xl mb-4">people_outline</mat-icon>
+          <p class="text-lg">No users found</p>
+          <p class="text-sm">Try adjusting your search criteria</p>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="!loading && users.length > 0" class="px-6 py-4 bg-gray-750 border-t border-gray-700">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="text-sm text-gray-400">Items per page:</span>
+            <select [(ngModel)]="pageSize" 
+                    (change)="onPageChange({pageIndex: 0, pageSize: pageSize})"
+                    class="bg-gray-700 text-white px-3 py-1 rounded border border-gray-600 text-sm">
+              <option [value]="10">10</option>
+              <option [value]="20">20</option>
+              <option [value]="50">50</option>
+              <option [value]="100">100</option>
+            </select>
+          </div>
+          
+          <div class="flex items-center space-x-4">
+            <span class="text-sm text-gray-400">{{ currentPage * pageSize + 1 }} - {{ Math.min((currentPage + 1) * pageSize, totalUsers) }} of {{ totalUsers }}</span>
+            
+            <div class="flex items-center space-x-2">
+              <button (click)="onPageChange({pageIndex: currentPage - 1, pageSize: pageSize})"
+                      [disabled]="currentPage === 0"
+                      class="p-2 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+              </button>
+              <button (click)="onPageChange({pageIndex: currentPage + 1, pageSize: pageSize})"
+                      [disabled]="(currentPage + 1) * pageSize >= totalUsers"
+                      class="p-2 text-gray-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

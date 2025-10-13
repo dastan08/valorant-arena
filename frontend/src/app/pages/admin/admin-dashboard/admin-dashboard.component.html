@@ -1,0 +1,174 @@
+<div class="min-h-screen bg-gray-900">
+  <!-- Modern Header -->
+  <div class="bg-gray-800 border-b border-gray-700 px-8 py-4 sticky top-0 z-10">
+    <div class="flex items-center justify-between max-w-7xl mx-auto">
+      <div>
+        <h1 class="text-2xl font-bold text-white">Admin Dashboard</h1>
+        <p class="text-sm text-gray-400">Platform management and monitoring</p>
+      </div>
+      <div class="flex items-center space-x-3">
+        <button routerLink="/" class="text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-700 transition-colors" title="Home">
+          <i class="fa-solid fa-house text-xl" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex items-center justify-center py-20">
+    <mat-spinner diameter="60" color="accent"></mat-spinner>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!loading" class="p-8 max-w-7xl mx-auto">
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+      <!-- Total Users -->
+      <div class="bg-gray-800 rounded-xl p-6 hover:bg-gray-750 transition-all cursor-pointer border border-gray-700"
+           (click)="navigateToUsers()">
+        <div class="flex items-start justify-between mb-4">
+          <span class="text-green-400 text-xs font-semibold bg-green-500/10 px-2 py-1 rounded-full">+12%</span>
+        </div>
+        <p class="text-gray-400 text-sm font-medium mb-1">Total Users</p>
+        <p class="text-3xl font-bold text-white">{{ stats.totalUsers | number }}</p>
+        <p class="text-xs text-gray-500 mt-2">View all users →</p>
+      </div>
+
+      <!-- Total Teams -->
+      <div class="bg-gray-800 rounded-xl p-6 hover:bg-gray-750 transition-all cursor-pointer border border-gray-700"
+           (click)="navigateToTeams()">
+        <div class="flex items-start justify-between mb-4">
+          <span class="text-blue-400 text-xs font-semibold bg-blue-500/10 px-2 py-1 rounded-full">+8%</span>
+        </div>
+        <p class="text-gray-400 text-sm font-medium mb-1">Total Teams</p>
+        <p class="text-3xl font-bold text-white">{{ stats.totalTeams | number }}</p>
+        <p class="text-xs text-gray-500 mt-2">Manage teams →</p>
+      </div>
+
+      <!-- Active Scrims -->
+      <div class="bg-gray-800 rounded-xl p-6 hover:bg-gray-750 transition-all cursor-pointer border border-gray-700"
+           (click)="navigateToScrims()">
+        <div class="flex items-start justify-between mb-4">
+          <span class="text-purple-400 text-xs font-semibold bg-purple-500/10 px-2 py-1 rounded-full">Live</span>
+        </div>
+        <p class="text-gray-400 text-sm font-medium mb-1">Active Scrims</p>
+        <p class="text-3xl font-bold text-white">{{ stats.activeScrims | number }}</p>
+        <p class="text-xs text-gray-500 mt-2">Monitor scrims →</p>
+      </div>
+
+      <!-- Pending Reports -->
+      <div class="bg-gray-800 rounded-xl p-6 hover:bg-gray-750 transition-all cursor-pointer border border-gray-700"
+           (click)="navigateToReports()">
+        <div class="flex items-start justify-between mb-4">
+          <span class="text-orange-400 text-xs font-semibold bg-orange-500/10 px-2 py-1 rounded-full">{{ stats.pendingReports }}</span>
+        </div>
+        <p class="text-gray-400 text-sm font-medium mb-1">Pending Reports</p>
+        <p class="text-3xl font-bold text-white">{{ stats.pendingReports | number }}</p>
+        <p class="text-xs text-gray-500 mt-2">Review reports →</p>
+      </div>
+
+      <!-- Online Users -->
+      <div class="bg-gray-800 rounded-xl p-6 hover:bg-gray-750 transition-all border border-gray-700">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex items-center">
+            <div class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+            <span class="text-green-400 text-xs font-semibold bg-green-500/10 px-2 py-1 rounded-full">Live</span>
+          </div>
+        </div>
+        <p class="text-gray-400 text-sm font-medium mb-1">Online Users</p>
+        <p class="text-3xl font-bold text-white">{{ stats.onlineUsers | number }}</p>
+        <p class="text-xs text-gray-500 mt-2">Currently active</p>
+      </div>
+
+      <!-- Total Matches -->
+      <div class="bg-gray-800 rounded-xl p-6 hover:bg-gray-750 transition-all border border-gray-700">
+        <div class="flex items-start justify-between mb-4">
+          <span class="text-indigo-400 text-xs font-semibold bg-indigo-500/10 px-2 py-1 rounded-full">All time</span>
+        </div>
+        <p class="text-gray-400 text-sm font-medium mb-1">Total Matches</p>
+        <p class="text-3xl font-bold text-white">{{ stats.totalMatches | number }}</p>
+        <p class="text-xs text-gray-500 mt-2">Completed matches</p>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- System Health -->
+      <div class="bg-gray-800 rounded-xl p-6 border border-gray-700">
+        <h3 class="text-lg font-bold text-white mb-6">
+          System Health
+        </h3>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between p-4 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors">
+            <span class="text-gray-300 font-medium">Database</span>
+            <span class="text-green-400 text-sm font-semibold bg-green-500/10 px-3 py-1 rounded-full">Healthy</span>
+          </div>
+          
+          <div class="flex items-center justify-between p-4 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors">
+            <span class="text-gray-300 font-medium">API Server</span>
+            <span class="text-green-400 text-sm font-semibold bg-green-500/10 px-3 py-1 rounded-full">Healthy</span>
+          </div>
+          
+          <div class="flex items-center justify-between p-4 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors">
+            <span class="text-gray-300 font-medium">Discord Bot</span>
+            <span class="text-green-400 text-sm font-semibold bg-green-500/10 px-3 py-1 rounded-full">Healthy</span>
+          </div>
+          
+          <div class="flex items-center justify-between p-4 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors">
+            <span class="text-gray-300 font-medium">Riot API</span>
+            <span class="text-green-400 text-sm font-semibold bg-green-500/10 px-3 py-1 rounded-full">Healthy</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="lg:col-span-2 bg-gray-800 rounded-xl p-6 border border-gray-700">
+        <h3 class="text-lg font-bold text-white mb-6">
+          Recent Activity
+        </h3>
+        <div class="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
+          <div *ngFor="let activity of recentActivity" class="flex items-start p-4 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors">
+            <div class="flex-1">
+              <p class="text-white text-sm font-medium">{{ activity.description }}</p>
+              <p class="text-gray-400 text-xs mt-1">{{ activity.timestamp | date:'short' }}</p>
+            </div>
+          </div>
+          
+          <!-- Placeholder if no activity -->
+          <div *ngIf="recentActivity.length === 0" class="text-center py-12 text-gray-500">
+            <mat-icon class="text-5xl mb-3 text-gray-600">inbox</mat-icon>
+            <p class="text-gray-400">No recent activity</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mt-6 bg-gray-800 rounded-xl p-6 border border-gray-700">
+      <h3 class="text-lg font-bold text-white mb-6">
+        Quick Actions
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <button class="flex items-center justify-center p-5 bg-gradient-to-br from-valorant-red to-pink-600 hover:from-valorant-red/90 hover:to-pink-600/90 rounded-xl text-white transition-all group"
+                (click)="navigateToUsers()">
+          <span class="font-medium">Manage Users</span>
+        </button>
+        
+        <button class="flex items-center justify-center p-5 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-500/90 hover:to-blue-600/90 rounded-xl text-white transition-all group"
+                (click)="navigateToTeams()">
+          <span class="font-medium">Manage Teams</span>
+        </button>
+        
+        <button class="flex items-center justify-center p-5 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-500/90 hover:to-purple-600/90 rounded-xl text-white transition-all group"
+                (click)="navigateToScrims()">
+          <span class="font-medium">Monitor Scrims</span>
+        </button>
+        
+        <button class="flex items-center justify-center p-5 bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-500/90 hover:to-orange-600/90 rounded-xl text-white transition-all group"
+                (click)="navigateToReports()">
+          <span class="font-medium">Review Reports</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

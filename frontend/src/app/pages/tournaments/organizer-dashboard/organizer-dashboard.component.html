@@ -1,0 +1,177 @@
+<div class="min-h-screen bg-valorant-dark py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <h1 class="text-3xl font-bold text-white">Organizer Dashboard</h1>
+        <p class="text-gray-400 mt-2">Manage your tournaments</p>
+      </div>
+      <button (click)="createTournament()"
+              class="bg-valorant-red hover:bg-red-600 text-white font-bold py-3 px-6 rounded transition-colors">
+        Create Tournament
+      </button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="mb-6 border-b border-gray-700">
+      <nav class="flex space-x-8">
+        <button (click)="selectedTab = 'all'"
+                [class.border-valorant-red]="selectedTab === 'all'"
+                [class.text-white]="selectedTab === 'all'"
+                [class.text-gray-400]="selectedTab !== 'all'"
+                class="py-4 px-1 border-b-2 border-transparent font-medium transition-colors">
+          All Tournaments
+        </button>
+        <button (click)="selectedTab = 'draft'"
+                [class.border-valorant-red]="selectedTab === 'draft'"
+                [class.text-white]="selectedTab === 'draft'"
+                [class.text-gray-400]="selectedTab !== 'draft'"
+                class="py-4 px-1 border-b-2 border-transparent font-medium transition-colors">
+          Drafts
+        </button>
+        <button (click)="selectedTab = 'active'"
+                [class.border-valorant-red]="selectedTab === 'active'"
+                [class.text-white]="selectedTab === 'active'"
+                [class.text-gray-400]="selectedTab !== 'active'"
+                class="py-4 px-1 border-b-2 border-transparent font-medium transition-colors">
+          Active
+        </button>
+        <button (click)="selectedTab = 'completed'"
+                [class.border-valorant-red]="selectedTab === 'completed'"
+                [class.text-white]="selectedTab === 'completed'"
+                [class.text-gray-400]="selectedTab !== 'completed'"
+                class="py-4 px-1 border-b-2 border-transparent font-medium transition-colors">
+          Completed
+        </button>
+      </nav>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-12">
+      <p class="text-gray-400">Loading tournaments...</p>
+    </div>
+
+    <!-- Tournaments Grid -->
+    <div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let tournament of filteredTournaments" 
+           class="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 hover:border-valorant-red transition-all duration-300 hover:shadow-2xl hover:shadow-valorant-red/20 group">
+        
+        <!-- Banner Image -->
+        <div class="relative h-48 bg-gradient-to-br from-valorant-red/20 to-gray-900 overflow-hidden">
+          <img *ngIf="tournament.bannerUrl || tournament.banner" 
+               [src]="'http://localhost:8080' + (tournament.bannerUrl || tournament.banner)" 
+               [alt]="tournament.name"
+               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+          <div *ngIf="!tournament.bannerUrl && !tournament.banner" 
+               class="w-full h-full flex items-center justify-center">
+            <svg class="w-20 h-20 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            </svg>
+          </div>
+          
+          <!-- Status Badge -->
+          <div class="absolute top-3 left-3">
+            <span [class]="getStatusBadge(tournament.status)" 
+                  class="px-3 py-1 rounded-full text-xs font-bold text-white backdrop-blur-sm">
+              {{ tournament.status }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Card Content -->
+        <div class="p-5">
+          <!-- Title -->
+          <h3 class="text-lg font-bold text-white mb-2 line-clamp-2 group-hover:text-valorant-red transition-colors">
+            {{ tournament.name }}
+          </h3>
+          
+          <!-- Description -->
+          <p class="text-gray-400 text-sm mb-4 line-clamp-2">
+            {{ tournament.description }}
+          </p>
+          
+          <!-- Stats Grid -->
+          <div class="grid grid-cols-2 gap-3 mb-4">
+            <div class="bg-gray-900/50 rounded-lg p-3">
+              <p class="text-gray-500 text-xs mb-1">Format</p>
+              <p class="text-white font-semibold text-sm">{{ tournament.format }}</p>
+            </div>
+            <div class="bg-gray-900/50 rounded-lg p-3">
+              <p class="text-gray-500 text-xs mb-1">Teams</p>
+              <p class="text-white font-semibold text-sm">
+                {{ tournament.registeredTeams?.length || 0 }}/{{ tournament.maxTeams }}
+              </p>
+            </div>
+            <div class="bg-gray-900/50 rounded-lg p-3">
+              <p class="text-gray-500 text-xs mb-1">Prize Pool</p>
+              <p class="text-green-400 font-bold text-sm">${{ tournament.prizePool }}</p>
+            </div>
+            <div class="bg-gray-900/50 rounded-lg p-3">
+              <p class="text-gray-500 text-xs mb-1">Start Date</p>
+              <p class="text-white font-semibold text-sm">{{ tournament.startDate | date:'MMM d' }}</p>
+            </div>
+          </div>
+
+          <!-- Organizer Info (like author in article card) -->
+          <div class="flex items-center gap-3 pt-4 border-t border-gray-700/50">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-valorant-red to-red-700 flex items-center justify-center text-white font-bold text-sm">
+              {{ tournament.organizer?.name?.substring(0, 2).toUpperCase() || 'OR' }}
+            </div>
+            <div class="flex-1">
+              <p class="text-white font-semibold text-sm">{{ tournament.organizer?.name || 'Organizer' }}</p>
+              <p class="text-gray-500 text-xs">{{ tournament.createdAt | date:'MMM d, yyyy' }}</p>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="grid grid-cols-2 gap-2 mt-4">
+            <button (click)="viewTournament(tournament.id)"
+                    class="px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-all font-semibold text-sm">
+              View Details
+            </button>
+            
+            <button *ngIf="tournament.status === 'DRAFT'"
+                    (click)="publishTournament(tournament)"
+                    class="px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-all font-semibold text-sm">
+              Publish
+            </button>
+            
+            <button *ngIf="tournament.status === 'REGISTRATION_OPEN' || tournament.status === 'OPEN'"
+                    (click)="manageTournament(tournament.id)"
+                    class="px-4 py-2.5 bg-valorant-red hover:bg-red-600 text-white rounded-lg transition-all font-semibold text-sm col-span-2">
+              Manage Tournament
+            </button>
+            
+            <button *ngIf="tournament.status === 'CHECK_IN'"
+                    (click)="generateBracket(tournament)"
+                    class="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-all font-semibold text-sm col-span-2">
+              Generate Bracket
+            </button>
+          </div>
+
+          <!-- More Actions Dropdown -->
+          <div class="mt-3">
+            <button (click)="openAssignModeratorDialog(tournament)"
+                    class="w-full px-4 py-2 bg-gray-900/50 hover:bg-gray-900 text-gray-300 hover:text-white rounded-lg transition-all text-sm font-medium border border-gray-700 hover:border-gray-600">
+              Assign Moderator
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && filteredTournaments.length === 0" 
+         class="col-span-full text-center py-16 bg-gray-800 rounded-xl border border-gray-700">
+      <svg class="w-20 h-20 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+      </svg>
+      <p class="text-gray-400 mb-6 text-lg">No tournaments found</p>
+      <button (click)="createTournament()"
+              class="bg-valorant-red hover:bg-red-600 text-white font-bold py-3 px-8 rounded-lg transition-all shadow-lg hover:shadow-xl">
+        Create Your First Tournament
+      </button>
+    </div>
+  </div>
+</div>

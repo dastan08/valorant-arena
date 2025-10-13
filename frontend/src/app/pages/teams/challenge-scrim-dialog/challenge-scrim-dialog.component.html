@@ -1,0 +1,95 @@
+<div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-xl p-6 w-full max-w-2xl border border-gray-700 shadow-2xl">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+      <span class="text-3xl">⚔️</span>
+      <span>Challenge Team to Scrim</span>
+    </h2>
+    <button (click)="close()" class="text-gray-400 hover:text-valorant-red text-2xl transition-colors">✕</button>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="bg-red-500/20 border border-red-500 text-red-500 px-4 py-3 rounded mb-4">
+    {{ error }}
+  </div>
+
+  <!-- Form -->
+  <div class="space-y-4">
+    <!-- Opponent Team Selection -->
+    <div>
+      <label class="block text-sm font-medium text-gray-300 mb-2">Opponent Team *</label>
+      <select [(ngModel)]="opponentTeam" 
+        class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+        <option [ngValue]="null">Select a team...</option>
+        <option *ngFor="let team of allTeams" [ngValue]="team">
+          {{ team.name }} [{{ team.tag }}]
+        </option>
+      </select>
+    </div>
+
+    <!-- Date and Time -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-2">Date *</label>
+        <input type="date" [(ngModel)]="scheduledDate"
+          class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-2">Time *</label>
+        <input type="time" [(ngModel)]="scheduledTime"
+          class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+      </div>
+    </div>
+
+    <!-- Map Selection -->
+    <div>
+      <label class="block text-sm font-medium text-gray-300 mb-2">Map</label>
+      <select [(ngModel)]="selectedMap"
+        class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+        <option *ngFor="let map of valorantMaps" [value]="map">{{ map }}</option>
+      </select>
+    </div>
+
+    <!-- Best Of -->
+    <div>
+      <label class="block text-sm font-medium text-gray-300 mb-2">Match Format</label>
+      <div class="flex gap-4">
+        <label class="flex items-center cursor-pointer">
+          <input type="radio" [(ngModel)]="bestOf" [value]="1" class="mr-2">
+          <span class="text-white">Best of 1</span>
+        </label>
+        <label class="flex items-center cursor-pointer">
+          <input type="radio" [(ngModel)]="bestOf" [value]="3" class="mr-2">
+          <span class="text-white">Best of 3</span>
+        </label>
+        <label class="flex items-center cursor-pointer">
+          <input type="radio" [(ngModel)]="bestOf" [value]="5" class="mr-2">
+          <span class="text-white">Best of 5</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Message -->
+    <div>
+      <label class="block text-sm font-medium text-gray-300 mb-2">Message (Optional)</label>
+      <textarea [(ngModel)]="message" rows="3" maxlength="500"
+        placeholder="Add a message to your challenge..."
+        class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-valorant-red resize-none">
+      </textarea>
+      <p class="text-xs text-gray-500 mt-1">{{ message.length }}/500</p>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex justify-end gap-3 mt-6">
+    <button (click)="close()" 
+      class="px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">
+      Cancel
+    </button>
+    <button (click)="challengeTeam()" 
+      [disabled]="loading || !opponentTeam"
+      class="px-6 py-2 bg-valorant-red hover:bg-red-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+      {{ loading ? 'Sending...' : 'Send Challenge' }}
+    </button>
+  </div>
+</div>

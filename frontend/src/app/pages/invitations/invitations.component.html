@@ -1,0 +1,78 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 py-12 px-4">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold text-white mb-2">Team Invitations</h1>
+      <p class="text-gray-400">Review and respond to your pending team invitations</p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error" class="mb-6 bg-red-900/20 border border-red-800 text-red-200 p-4 rounded-lg">
+      {{ error }}
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading && invitations.length === 0" class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-valorant-red"></div>
+      <p class="text-gray-400 mt-4">Loading invitations...</p>
+    </div>
+
+    <!-- No Invitations -->
+    <div *ngIf="!loading && invitations.length === 0" class="bg-gray-800 rounded-lg p-12 text-center border border-gray-700">
+      <svg class="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+      </svg>
+      <h3 class="text-xl font-semibold text-white mb-2">No Pending Invitations</h3>
+      <p class="text-gray-400 mb-6">You don't have any team invitations at the moment</p>
+      <a routerLink="/teams" class="inline-block bg-valorant-red hover:bg-red-600 text-white font-bold px-6 py-3 rounded-lg transition-all">
+        Browse Teams
+      </a>
+    </div>
+
+    <!-- Invitations List -->
+    <div *ngIf="!loading && invitations.length > 0" class="space-y-4">
+      <div *ngFor="let invitation of invitations" 
+        class="bg-gray-800 rounded-lg border border-gray-700 hover:border-valorant-red transition-all overflow-hidden">
+        <div class="p-6">
+          <div class="flex items-start justify-between">
+            <!-- Team Info -->
+            <div class="flex items-center gap-4 flex-1">
+              <img [src]="getTeamLogo(invitation)" 
+                alt="Team Logo" 
+                class="w-16 h-16 rounded-full border-2 border-gray-600">
+              <div class="flex-1">
+                <h3 class="text-xl font-bold text-white mb-1">
+                  {{ invitation.teamName }}
+                  <span class="text-gray-400 text-sm font-normal ml-2">[{{ invitation.teamTag }}]</span>
+                </h3>
+                <p class="text-gray-400 text-sm mb-2">
+                  Invited by <span class="text-white font-semibold">{{ invitation.invitedByUsername }}</span>
+                </p>
+                <p *ngIf="invitation.message" class="text-gray-300 text-sm italic">
+                  "{{ invitation.message }}"
+                </p>
+                <p class="text-gray-500 text-xs mt-2">
+                  {{ invitation.createdAt | date:'medium' }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-3 ml-4">
+              <button (click)="acceptInvitation(invitation)"
+                [disabled]="loading"
+                class="bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-3 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                Accept
+              </button>
+              <button (click)="declineInvitation(invitation)"
+                [disabled]="loading"
+                class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                Decline
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

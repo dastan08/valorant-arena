@@ -1,0 +1,47 @@
+/* Custom scrollbar for dialog content */
+::ng-deep .mat-mdc-dialog-content {
+  scrollbar-width: thin;
+  scrollbar-color: #FF4655 #1f2937;
+}
+
+::ng-deep .mat-mdc-dialog-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+::ng-deep .mat-mdc-dialog-content::-webkit-scrollbar-track {
+  background: #1f2937;
+  border-radius: 4px;
+}
+
+::ng-deep .mat-mdc-dialog-content::-webkit-scrollbar-thumb {
+  background: #FF4655;
+  border-radius: 4px;
+}
+
+::ng-deep .mat-mdc-dialog-content::-webkit-scrollbar-thumb:hover {
+  background: #e63946;
+}
+
+/* Smooth animations */
+.transition-all {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover effects for cards */
+.hover\:border-gray-600:hover {
+  border-color: #4b5563 !important;
+}
+
+/* Badge animations */
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}

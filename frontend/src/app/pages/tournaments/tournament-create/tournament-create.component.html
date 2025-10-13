@@ -1,0 +1,333 @@
+<div class="min-h-screen bg-valorant-dark py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-white">Create Tournament</h1>
+      <p class="text-gray-400 mt-2">Set up your competitive tournament</p>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="mb-8">
+      <div class="flex justify-between mb-2">
+        <span class="text-sm font-medium text-white">Step {{ currentStep }} of {{ totalSteps }}</span>
+        <span class="text-sm font-medium text-white">{{ progressPercentage }}%</span>
+      </div>
+      <div class="w-full bg-gray-700 rounded-full h-2">
+        <div class="bg-valorant-red h-2 rounded-full transition-all duration-300" 
+             [style.width.%]="progressPercentage"></div>
+      </div>
+      
+      <!-- Step Indicators -->
+      <div class="flex justify-between mt-4">
+        <button *ngFor="let step of [1, 2, 3, 4]" 
+                (click)="goToStep(step)"
+                [class.text-valorant-red]="currentStep === step"
+                [class.text-white]="currentStep > step"
+                [class.text-gray-500]="currentStep < step"
+                class="text-sm font-medium transition-colors">
+          {{ getStepTitle(step) }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="tournamentForm" class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+      
+      <!-- Step 1: Basic Information -->
+      <div *ngIf="currentStep === 1" class="space-y-6">
+        <h2 class="text-2xl font-bold text-white mb-6">Basic Information</h2>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Tournament Name *</label>
+          <input type="text" 
+                 formControlName="name"
+                 placeholder="e.g., Summer Championship 2025"
+                 class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-valorant-red">
+          <p *ngIf="tournamentForm.get('name')?.invalid && tournamentForm.get('name')?.touched" 
+             class="mt-1 text-sm text-red-500">
+            Tournament name is required (3-100 characters)
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Description *</label>
+          <textarea formControlName="description"
+                    rows="4"
+                    placeholder="Describe your tournament..."
+                    class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-valorant-red"></textarea>
+          <p *ngIf="tournamentForm.get('description')?.invalid && tournamentForm.get('description')?.touched" 
+             class="mt-1 text-sm text-red-500">
+            Description is required (minimum 10 characters)
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Tournament Banner (Optional)</label>
+          
+          <!-- Banner Preview -->
+          <div *ngIf="bannerPreview" class="mb-4 relative">
+            <img [src]="bannerPreview" alt="Banner preview" class="w-full h-48 object-cover rounded-lg border-2 border-gray-600">
+            <button type="button" 
+                    (click)="removeBanner()"
+                    class="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Upload Button -->
+          <div *ngIf="!bannerPreview" class="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center hover:border-valorant-red transition-colors cursor-pointer"
+               (click)="fileInput.click()">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            <p class="mt-2 text-sm text-gray-400">Click to upload banner image</p>
+            <p class="mt-1 text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
+          </div>
+          
+          <input #fileInput
+                 type="file" 
+                 accept="image/*"
+                 (change)="onBannerSelect($event)"
+                 class="hidden">
+          
+          <p class="mt-2 text-xs text-gray-500">Recommended size: 1920x400 pixels</p>
+        </div>
+      </div>
+
+      <!-- Step 2: Configuration -->
+      <div *ngIf="currentStep === 2" class="space-y-6">
+        <h2 class="text-2xl font-bold text-white mb-6">Configuration</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Game Mode *</label>
+            <select formControlName="gameMode"
+                    class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+              <option *ngFor="let mode of gameModes" [value]="mode.value">{{ mode.label }}</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Tournament Format *</label>
+            <select formControlName="format"
+                    class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+              <option *ngFor="let format of tournamentFormats" [value]="format.value">{{ format.label }}</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Max Participants *</label>
+            <input type="number" 
+                   formControlName="maxParticipants"
+                   min="4"
+                   max="128"
+                   class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Min Participants *</label>
+            <input type="number" 
+                   formControlName="minParticipants"
+                   min="2"
+                   class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Team Size *</label>
+            <input type="number" 
+                   formControlName="teamSize"
+                   min="1"
+                   class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Region *</label>
+            <select formControlName="region"
+                    class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+              <option *ngFor="let region of regions" [value]="region.value">{{ region.label }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Min Rank (Optional)</label>
+            <input type="text" 
+                   formControlName="minRank"
+                   placeholder="e.g., Gold 1"
+                   class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-valorant-red">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Max Rank (Optional)</label>
+            <input type="text" 
+                   formControlName="maxRank"
+                   placeholder="e.g., Diamond 3"
+                   class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-valorant-red">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Schedule -->
+      <div *ngIf="currentStep === 3" class="space-y-6">
+        <h2 class="text-2xl font-bold text-white mb-6">Schedule</h2>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Registration Start *</label>
+          <input type="datetime-local" 
+                 formControlName="registrationStart"
+                 class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Registration End *</label>
+          <input type="datetime-local" 
+                 formControlName="registrationEnd"
+                 class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Check-in Start *</label>
+          <input type="datetime-local" 
+                 formControlName="checkInStart"
+                 class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Check-in End *</label>
+          <input type="datetime-local" 
+                 formControlName="checkInEnd"
+                 class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Tournament Start *</label>
+          <input type="datetime-local" 
+                 formControlName="tournamentStart"
+                 class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+        </div>
+      </div>
+
+      <!-- Step 4: Rules & Prizes -->
+      <div *ngIf="currentStep === 4" class="space-y-6">
+        <h2 class="text-2xl font-bold text-white mb-6">Rules & Prizes</h2>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Tournament Rules *</label>
+          <textarea formControlName="rules"
+                    rows="6"
+                    placeholder="Enter tournament rules and regulations..."
+                    class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-valorant-red"></textarea>
+          <p *ngIf="tournamentForm.get('rules')?.invalid && tournamentForm.get('rules')?.touched" 
+             class="mt-1 text-sm text-red-500">
+            Rules are required (minimum 20 characters)
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Prize Pool ($)</label>
+            <input type="number" 
+                   formControlName="prizePool"
+                   min="0"
+                   step="0.01"
+                   class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Entry Fee ($)</label>
+            <input type="number" 
+                   formControlName="entryFee"
+                   min="0"
+                   step="0.01"
+                   class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Match Format *</label>
+          <select formControlName="matchFormat"
+                  class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+            <option *ngFor="let format of matchFormats" [value]="format.value">{{ format.label }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Map Pool</label>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
+            <button *ngFor="let map of availableMaps"
+                    type="button"
+                    (click)="toggleMap(map)"
+                    [class.bg-valorant-red]="isMapSelected(map)"
+                    [class.bg-gray-700]="!isMapSelected(map)"
+                    class="px-4 py-2 rounded-lg text-white font-medium transition-colors hover:opacity-80">
+              {{ map }}
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <label class="flex items-center cursor-pointer">
+            <input type="checkbox" 
+                   formControlName="allowSubstitutes"
+                   class="w-5 h-5 text-valorant-red bg-gray-700 border-gray-600 rounded focus:ring-valorant-red">
+            <span class="ml-2 text-white">Allow Substitutes</span>
+          </label>
+
+          <div *ngIf="tournamentForm.get('allowSubstitutes')?.value">
+            <input type="number" 
+                   formControlName="maxSubstitutes"
+                   min="0"
+                   max="5"
+                   placeholder="Max"
+                   class="w-20 px-3 py-1 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-valorant-red">
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="flex justify-between mt-8 pt-6 border-t border-gray-700">
+        <div class="space-x-3">
+          <button type="button"
+                  (click)="cancel()"
+                  class="px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">
+            Cancel
+          </button>
+          <button type="button"
+                  (click)="saveDraft()"
+                  [disabled]="savingDraft"
+                  class="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition-colors disabled:opacity-50">
+            {{ savingDraft ? 'Saving...' : 'Save Draft' }}
+          </button>
+        </div>
+
+        <div class="space-x-3">
+          <button *ngIf="currentStep > 1"
+                  type="button"
+                  (click)="previousStep()"
+                  class="px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">
+            Previous
+          </button>
+          
+          <button *ngIf="currentStep < totalSteps"
+                  type="button"
+                  (click)="nextStep()"
+                  [disabled]="!isStepValid(currentStep)"
+                  class="px-6 py-2 bg-valorant-red hover:bg-red-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            Next
+          </button>
+          
+          <button *ngIf="currentStep === totalSteps"
+                  type="button"
+                  (click)="submit()"
+                  [disabled]="!tournamentForm.valid || submitting"
+                  class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            {{ submitting ? 'Creating...' : 'Create Tournament' }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

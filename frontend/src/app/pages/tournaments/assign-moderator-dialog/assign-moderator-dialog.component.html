@@ -1,0 +1,73 @@
+<div class="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-xl shadow-2xl w-full overflow-hidden border border-gray-700">
+  <!-- Close Button -->
+  <button type="button" (click)="onCancel()" 
+    class="absolute top-4 right-4 z-10 text-valorant-red hover:text-red-400 transition-all duration-200 w-10 h-10 flex items-center justify-center font-bold text-2xl">
+    ✕
+  </button>
+
+  <!-- Header -->
+  <div class="px-8 pt-12 pb-8 text-center">
+    <h2 class="text-3xl font-bold text-white mb-3">Assign Moderator</h2>
+    <p class="text-gray-400 text-sm">Add a moderator to help manage this tournament</p>
+  </div>
+
+  <!-- Content -->
+  <mat-dialog-content class="px-8 pb-6">
+    <form [formGroup]="assignForm" (ngSubmit)="onAssign()" class="space-y-5">
+      <!-- User Selection -->
+      <div>
+        <label class="block text-sm font-medium text-white mb-3 text-center">
+          Select Moderator
+        </label>
+        <select 
+          formControlName="userId"
+          class="w-full bg-white text-gray-800 rounded-lg px-5 py-4 border-0 focus:ring-2 focus:ring-green-500 focus:outline-none transition-all duration-200 font-medium shadow-lg cursor-pointer text-center"
+          [disabled]="loadingUsers">
+          <option value="">{{ loadingUsers ? 'Loading users...' : 'Choose a user' }}</option>
+          <option *ngFor="let user of availableUsers" [value]="user.id">
+            {{ user.username }} ({{ user.email }})
+          </option>
+        </select>
+        <div *ngIf="assignForm.get('userId')?.touched && assignForm.get('userId')?.errors" class="mt-2 text-red-300 text-xs text-center">
+          <span *ngIf="assignForm.get('userId')?.hasError('required')">Please select a user</span>
+        </div>
+        <p *ngIf="availableUsers.length === 0 && !loadingUsers" class="mt-3 text-yellow-400 text-xs text-center bg-yellow-900/20 border border-yellow-800 rounded-lg p-3">
+          No users with TOURNAMENT MODERATOR role found. Assign the role to users first.
+        </p>
+      </div>
+
+      <!-- Notes -->
+      <div>
+        <label class="block text-sm font-medium text-white mb-3 text-center">
+          Notes <span class="text-gray-400 text-xs">(Optional)</span>
+        </label>
+        <textarea 
+          formControlName="notes"
+          rows="3"
+          class="w-full bg-white text-gray-800 rounded-lg px-5 py-4 border-0 focus:ring-2 focus:ring-green-500 focus:outline-none transition-all duration-200 placeholder:text-gray-400 resize-none shadow-lg"
+          placeholder="Add any notes about this assignment..."></textarea>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex gap-4 pt-6">
+        <button 
+          type="button"
+          (click)="onCancel()"
+          [disabled]="loading"
+          class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold px-6 py-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg text-base">
+          Cancel
+        </button>
+        <button 
+          type="submit"
+          [disabled]="assignForm.invalid || loading || availableUsers.length === 0"
+          class="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold px-6 py-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl flex items-center justify-center text-base">
+          <span *ngIf="!loading">Assign Moderator</span>
+          <span *ngIf="loading" class="flex items-center justify-center gap-2">
+            <mat-spinner diameter="20" strokeWidth="3"></mat-spinner>
+            <span>Assigning...</span>
+          </span>
+        </button>
+      </div>
+    </form>
+  </mat-dialog-content>
+</div>
