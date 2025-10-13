@@ -334,7 +334,7 @@ After=syslog.target network.target
 User=ec2-user
 WorkingDirectory=/home/ec2-user/valorant-arena/backend
 EnvironmentFile=/home/ec2-user/valorant-arena/backend/.env.production
-ExecStart=/usr/bin/java -jar /home/ec2-user/valorant-arena/backend/target/valorant-arena-0.1-SNAPSHOT.jar --spring.profiles.active=prod
+ExecStart=/usr/bin/java -jar /home/ec2-user/valorant-arena/backend/target/valorant-arena-backend-1.0.0.jar --spring.profiles.active=prod
 SuccessExitStatus=143
 StandardOutput=journal
 StandardError=journal
@@ -345,10 +345,7 @@ RestartSec=10
 WantedBy=multi-user.target
 ```
 
-**Important:** Replace the JAR filename with your actual JAR name. Check with:
-```bash
-ls -lh /home/ec2-user/valorant-arena/backend/target/*.jar
-```
+**Note:** The JAR filename is `valorant-arena-backend-1.0.0.jar` (from pom.xml: artifactId + version)
 
 ```bash
 # Reload systemd, enable and start service
@@ -378,11 +375,17 @@ sudo nano /etc/nginx/conf.d/valorant-arena.conf
 ```nginx
 server {
     listen 80;
-    server_name your-domain.com www.your-domain.com;
+    # Use your EC2 public IP instead of domain name
+    # Replace with your actual EC2 IP: 223.185.30.87
+    server_name 223.185.30.87;
+    
+    # Or use EC2 public DNS:
+    # server_name ec2-223-185-30-87.eu-north-1.compute.amazonaws.com;
+    
+    # Or use underscore to accept any hostname (for testing):
+    # server_name _;
 
-    # Redirect HTTP to HTTPS (after SSL setup)
-    # return 301 https://$server_name$request_uri;
-
+    # Backend API proxy
     location /api/ {
         proxy_pass http://localhost:8080/api/;
         proxy_set_header Host $host;
@@ -391,12 +394,28 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
+    # File uploads proxy
     location /uploads/ {
         proxy_pass http://localhost:8080/uploads/;
         proxy_set_header Host $host;
     }
+    
+    # Swagger UI (optional, for testing)
+    location /swagger-ui/ {
+        proxy_pass http://localhost:8080/swagger-ui/;
+        proxy_set_header Host $host;
+    }
+    
+    # Frontend (if serving from same server)
+    # Uncomment if you deploy Angular to /var/www/html
+    # location / {
+    #     root /var/www/html;
+    #     try_files $uri $uri/ /index.html;
+    # }
 }
 ```
+
+**Note:** Replace `223.185.30.87` with your actual EC2 public IP, or use `server_name _;` to accept any hostname.
 
 ```bash
 # Test Nginx configuration

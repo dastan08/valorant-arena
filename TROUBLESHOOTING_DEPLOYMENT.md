@@ -30,7 +30,7 @@ ls -lh /home/ec2-user/valorant-arena/backend/target/*.jar
 
 **Expected output:**
 ```
-/home/ec2-user/valorant-arena/backend/target/valorant-arena-0.1-SNAPSHOT.jar
+/home/ec2-user/valorant-arena/backend/target/valorant-arena-backend-1.0.0.jar
 ```
 
 ---
@@ -56,7 +56,7 @@ After=syslog.target network.target
 User=ec2-user
 WorkingDirectory=/home/ec2-user/valorant-arena/backend
 EnvironmentFile=/home/ec2-user/valorant-arena/backend/.env.production
-ExecStart=/usr/bin/java -jar /home/ec2-user/valorant-arena/backend/target/valorant-arena-0.1-SNAPSHOT.jar --spring.profiles.active=prod
+ExecStart=/usr/bin/java -jar /home/ec2-user/valorant-arena/backend/target/valorant-arena-backend-1.0.0.jar --spring.profiles.active=prod
 SuccessExitStatus=143
 StandardOutput=journal
 StandardError=journal
@@ -277,7 +277,7 @@ sudo systemctl stop valorant-arena
 # Run manually to see errors
 cd /home/ec2-user/valorant-arena/backend
 source .env.production
-java -jar target/valorant-arena-0.1-SNAPSHOT.jar
+java -jar target/valorant-arena-backend-1.0.0.jar
 ```
 
 ### Check if Backend is Running
@@ -352,7 +352,8 @@ sudo journalctl -u valorant-arena -f
 **Region:** `eu-north-1`  
 **Your IP:** `223.185.30.87`  
 **Repository Path:** `/home/ec2-user/valorant-arena/`  
-**JAR Path:** `/home/ec2-user/valorant-arena/backend/target/valorant-arena-0.1-SNAPSHOT.jar`  
+**JAR Path:** `/home/ec2-user/valorant-arena/backend/target/valorant-arena-backend-1.0.0.jar`  
+**JAR Name:** `valorant-arena-backend-1.0.0.jar` (from pom.xml: artifactId=valorant-arena-backend, version=1.0.0)  
 
 ---
 
