@@ -441,27 +441,26 @@ sudo systemctl status nginx
 # On your local machine
 cd frontend
 
-# Update environment for production
-nano src/environments/environment.prod.ts
+# QUICK METHOD: Find and Replace API URL
+# Use your editor (Ctrl + Shift + H in VS Code) to find and replace:
+# Find: http://localhost:8080/api
+# Replace: http://223.185.30.87/api
+# In files: src/app/**/*.ts
 
-# Set API URL to your EC2 public IP or domain:
-```
+# Or manually update the API URL in each service file
+# Example in auth.service.ts:
+# Change: private apiUrl = 'http://localhost:8080/api/auth';
+# To: private apiUrl = 'http://223.185.30.87/api/auth';
 
-```typescript
-export const environment = {
-  production: true,
-  apiUrl: 'http://YOUR-EC2-PUBLIC-IP/api',
-  // Or with domain:
-  // apiUrl: 'https://api.yourdomain.com/api'
-};
-```
-
-```bash
 # Build for production
-npm run build --prod
+npm run build
 
-# This creates dist/ folder with optimized files
+# This creates dist/valorant-arena-frontend/ folder with optimized files
 ```
+
+**Note:** See `UPDATE_API_URL.md` for detailed instructions on managing API URLs.
+
+**Your API URL:** `http://223.185.30.87/api` (using your EC2 IP)
 
 #### Step 2: Create S3 Bucket
 
