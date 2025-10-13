@@ -62,8 +62,14 @@ CREATE DATABASE valorant_arena;
 ```bash
 cd backend
 
-# Update application.yml with your MySQL credentials
-# src/main/resources/application.yml
+# Create secrets configuration file
+cp src/main/resources/application-secrets.yml.template src/main/resources/application-secrets.yml
+
+# Edit application-secrets.yml and add your actual secrets:
+# - Database password
+# - JWT secret key
+# - Riot API key and OAuth credentials
+# - Discord OAuth credentials and bot token
 
 # Build the project
 mvn clean install
@@ -75,6 +81,8 @@ mvn spring-boot:run
 The backend will start on `http://localhost:8080`
 
 **API Documentation**: `http://localhost:8080/swagger-ui.html`
+
+**⚠️ Important**: Never commit `application-secrets.yml` to version control. It's already in `.gitignore`.
 
 ### 4. Frontend Setup
 
@@ -90,24 +98,35 @@ npm start
 
 The frontend will start on `http://localhost:4200`
 
-## Environment Variables
+## Configuration
 
-### Backend (`application.yml`)
+### Backend Configuration
 
-```yaml
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/valorant_arena
-    username: root
-    password: your_password
+The backend uses two configuration files:
 
-jwt:
-  secret: your-secret-key-change-this-in-production
-  expiration: 86400000
+1. **`application.yml`** - Main configuration (committed to git)
+   - Contains non-sensitive defaults and structure
+   - Uses environment variables with fallback values
 
-cors:
-  allowed-origins: http://localhost:4200
-```
+2. **`application-secrets.yml`** - Secrets configuration (NOT committed to git)
+   - Contains actual API keys, tokens, and passwords
+   - Created from `application-secrets.yml.template`
+   - Already in `.gitignore`
+
+**Required Secrets:**
+- Database password
+- JWT secret key (minimum 256 bits)
+- Riot Games API key
+- Riot OAuth client ID and secret
+- Discord OAuth client ID and secret
+- Discord bot token
+
+You can also use environment variables instead of `application-secrets.yml`:
+- `DB_PASSWORD` - Database password
+- `JWT_SECRET` - JWT secret key
+- `RIOT_API_KEY` - Riot Games API key
+- `RIOT_CLIENT_ID`, `RIOT_CLIENT_SECRET` - Riot OAuth
+- `DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET`, `DISCORD_BOT_TOKEN` - Discord
 
 ## Project Structure
 
