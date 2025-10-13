@@ -57,9 +57,14 @@ frontend/typings/
 .env
 .env.local
 .env.*.local
+.env.production
+backend/.env.production
 
 # Secret configuration files
 backend/src/main/resources/application-secrets.yml
+
+# AWS credentials
+*_accessKeys.csv
 
 # Logs
 logs/
