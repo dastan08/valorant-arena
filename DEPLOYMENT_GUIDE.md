@@ -295,7 +295,7 @@ JWT_SECRET=your-production-jwt-secret-minimum-256-bits
 
 # CORS settings - Use your EC2 public IP/DNS (no domain needed)
 # Get your EC2 public IP from AWS Console or run: curl http://checkip.amazonaws.com
-CORS_ORIGINS=http://YOUR_EC2_PUBLIC_IP:4200,http://ec2-XX-XX-XX-XX.eu-north-1.compute.amazonaws.com:4200
+CORS_ORIGINS=http://223.185.30.87:4200,http://ec2-XX-XX-XX-XX.eu-north-1.compute.amazonaws.com:4200
 
 # Or if testing locally, keep localhost:
 # CORS_ORIGINS=http://localhost:4200
@@ -332,13 +332,22 @@ After=syslog.target network.target
 
 [Service]
 User=ec2-user
-ExecStart=/usr/bin/java -jar /home/ec2-user/windsurf-project/backend/target/valorant-arena-0.0.1-SNAPSHOT.jar
+WorkingDirectory=/home/ec2-user/valorant-arena/backend
+EnvironmentFile=/home/ec2-user/valorant-arena/backend/.env.production
+ExecStart=/usr/bin/java -jar /home/ec2-user/valorant-arena/backend/target/valorant-arena-0.1-SNAPSHOT.jar --spring.profiles.active=prod
 SuccessExitStatus=143
+StandardOutput=journal
+StandardError=journal
 Restart=always
 RestartSec=10
 
 [Install]
 WantedBy=multi-user.target
+```
+
+**Important:** Replace the JAR filename with your actual JAR name. Check with:
+```bash
+ls -lh /home/ec2-user/valorant-arena/backend/target/*.jar
 ```
 
 ```bash
