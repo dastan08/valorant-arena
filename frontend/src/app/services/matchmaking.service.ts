@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, interval } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { environment } from '../core/config/environment';
 
 export interface MatchmakingResponse {
   queueId: number;
@@ -28,7 +29,7 @@ export interface ApiResponse<T> {
   providedIn: 'root'
 })
 export class MatchmakingService {
-  private apiUrl = 'http://13.201.185.135:8080/api/matchmaking';
+  private apiUrl = `${environment.apiUrl}/matchmaking`;
 
   constructor(private http: HttpClient) {}
 

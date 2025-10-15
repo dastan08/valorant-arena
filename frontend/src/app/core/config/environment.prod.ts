@@ -3,8 +3,8 @@
 
 export const environment = {
   production: true,
-  // Replace with your EC2 public IP or domain
-  apiUrl: 'http://223.185.30.87/api'
+  // EC2 backend API URL
+  apiUrl: 'http://13.201.185.135:8080/api'
   
   // When you get a domain, update to:
   // apiUrl: 'https://yourdomain.com/api'
