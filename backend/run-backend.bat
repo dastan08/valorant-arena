@@ -30,9 +30,15 @@ echo [3/3] Starting backend server...
 echo Backend will be available at: http://localhost:8080
 echo Swagger UI: http://localhost:8080/swagger-ui/index.html
 echo.
+echo Using profile: local
 echo Press Ctrl+C to stop the server
 echo.
 
-call mvn spring-boot:run
+REM Set environment variables for local development
+set DISCORD_CLIENT_ID=1426309142389325824
+set DISCORD_CLIENT_SECRET=FNRTqv2GcYprTPm6RzLpRKcimtOldQxi
+set DISCORD_BOT_TOKEN=MTQyNjU3MzU0NDEyMDEyNzY3MQ.Gb29dW.OoJEqvRP-lRuAHta53uTFqQjP5S_7qHbV9PVYw
+
+call mvn spring-boot:run -Dspring-boot.run.profiles=local
 
 pause

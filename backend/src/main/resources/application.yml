@@ -2,6 +2,12 @@ spring:
   application:
     name: valorant-arena
   
+  # Import additional configuration files
+  config:
+    import:
+      - optional:file:./application-secrets.yml
+      - optional:classpath:application-secrets.yml
+  
   datasource:
     url: ${DB_URL:jdbc:mysql://localhost:3306/valorant_arena?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
     username: ${DB_USERNAME:root}
@@ -68,7 +74,7 @@ riot:
 discord:
   client-id: ${DISCORD_CLIENT_ID:your-discord-client-id}
   client-secret: ${DISCORD_CLIENT_SECRET:your-discord-client-secret}
-  redirect-uri: http://localhost:4200/auth/discord/callback
+  redirect-uri: ${DISCORD_REDIRECT_URI:http://localhost:4200/auth/discord/callback}
   bot:
     token: ${DISCORD_BOT_TOKEN:your-discord-bot-token}
 

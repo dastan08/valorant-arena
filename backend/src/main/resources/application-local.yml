@@ -1,0 +1,33 @@
+# Local Development Configuration
+# This file is for local development only
+# Copy this to application-secrets.yml and update with your actual credentials
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/valorant_arena?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: abcd  # Change this to your MySQL password
+
+# Discord OAuth Configuration
+discord:
+  client-id: 1426309142389325824
+  client-secret: FNRTqv2GcYprTPm6RzLpRKcimtOldQxi
+  redirect-uri: http://localhost:4200/auth/discord/callback
+  bot:
+    token: MTQyNjU3MzU0NDEyMDEyNzY3MQ.Gb29dW.OoJEqvRP-lRuAHta53uTFqQjP5S_7qHbV9PVYw
+
+# Riot API Configuration (Optional for local dev)
+riot:
+  api:
+    key: RGAPI-your-riot-api-key-here
+  oauth:
+    client-id: your-riot-client-id
+    client-secret: your-riot-client-secret
+
+# JWT Secret
+jwt:
+  secret: valorant-arena-super-secret-key-for-jwt-token-generation-minimum-256-bits-required
+
+# CORS for local development
+cors:
+  allowed-origins: http://localhost:4200,http://localhost:3000
