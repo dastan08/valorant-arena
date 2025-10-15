@@ -28,7 +28,7 @@ export interface ApiResponse<T> {
   providedIn: 'root'
 })
 export class MatchmakingService {
-  private apiUrl = 'http://localhost:8080/api/matchmaking';
+  private apiUrl = 'http://13.201.185.135:8080/api/matchmaking';
 
   constructor(private http: HttpClient) {}
 

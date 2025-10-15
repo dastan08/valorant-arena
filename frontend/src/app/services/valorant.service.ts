@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ValorantService {
-  private apiUrl = 'http://localhost:8080/api/valorant';
+  private apiUrl = 'http://13.201.185.135:8080/api/valorant';
 
   constructor(private http: HttpClient) {}
 

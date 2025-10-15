@@ -18,7 +18,7 @@ if not exist "src\main\resources\application-secrets.yml" (
     echo   datasource:
     echo     url: jdbc:mysql://valorant-arena.cxy4ycyyyyvy.ap-south-1.rds.amazonaws.com:3306/valorant_arena?useSSL=true^&requireSSL=true^&serverTimezone=UTC
     echo     username: admin
-    echo     password: AGYX3h3NinSDKLx7a0D2
+    echo     password: YOUR_PASSWORD
     echo.
     pause
     exit /b 1
