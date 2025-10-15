@@ -65,6 +65,8 @@ riot:
     client-id: ${RIOT_CLIENT_ID:your-riot-client-id}
     client-secret: ${RIOT_CLIENT_SECRET:your-riot-client-secret}
     redirect-uri: ${RIOT_REDIRECT_URI:http://localhost:4200/auth/riot/callback}
+    # For S3/CloudFront: Set RIOT_REDIRECT_URI=https://your-cloudfront-url/auth/riot/callback
+    # For Custom Domain: Set RIOT_REDIRECT_URI=https://yourdomain.com/auth/riot/callback
     authorization-uri: https://auth.riotgames.com/authorize
     token-uri: https://auth.riotgames.com/token
     user-info-uri: https://auth.riotgames.com/userinfo
@@ -75,6 +77,8 @@ discord:
   client-id: ${DISCORD_CLIENT_ID:your-discord-client-id}
   client-secret: ${DISCORD_CLIENT_SECRET:your-discord-client-secret}
   redirect-uri: ${DISCORD_REDIRECT_URI:http://localhost:4200/auth/discord/callback}
+  # For S3/CloudFront: Set DISCORD_REDIRECT_URI=https://your-cloudfront-url/auth/discord/callback
+  # For Custom Domain: Set DISCORD_REDIRECT_URI=https://yourdomain.com/auth/discord/callback
   bot:
     token: ${DISCORD_BOT_TOKEN:your-discord-bot-token}
 
