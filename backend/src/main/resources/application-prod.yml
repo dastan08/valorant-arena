@@ -1,7 +1,13 @@
 # Production Configuration for AWS RDS
 spring:
+  # Import secrets file
+  config:
+    import:
+      - optional:file:./application-secrets.yml
+      - optional:classpath:application-secrets.yml
+  
   datasource:
-    url: jdbc:mysql://valorant-arena-db.cf66qis4ur83.eu-north-1.rds.amazonaws.com:3306/valorant_arena?useSSL=true&requireSSL=true&serverTimezone=UTC
+    url: ${DB_URL:jdbc:mysql://valorant-arena.cxy4ycyyyyvy.ap-south-1.rds.amazonaws.com:3306/valorant_arena?useSSL=true&requireSSL=true&serverTimezone=UTC}
     username: ${DB_USERNAME:admin}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
