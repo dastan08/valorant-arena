@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Team } from '../models/user.model';
 import { ApiResponse } from '../models/auth.model';
+import { environment } from '../config/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TeamService {
-  private apiUrl = 'http://localhost:8080/api/teams';
+  private apiUrl = `${environment.apiUrl}/teams`;
 
   constructor(private http: HttpClient) { }
 
@@ -107,6 +108,6 @@ export class TeamService {
   uploadTeamLogo(file: File): Observable<ApiResponse<string>> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<ApiResponse<string>>('http://localhost:8080/api/upload/team-logo', formData);
+    return this.http.post<ApiResponse<string>>(`${environment.apiUrl}/upload/team-logo`, formData);
   }
 }

@@ -64,7 +64,7 @@ public class TournamentMatch {
     private Integer bestOf = 1;
 
     @Type(JsonBinaryType.class)
-    @Column(name = "maps_played", columnDefinition = "jsonb")
+    @Column(name = "maps_played", columnDefinition = "json")
     private List<Map<String, Object>> mapsPlayed;
 
     @Enumerated(EnumType.STRING)
@@ -86,7 +86,7 @@ public class TournamentMatch {
     private LocalDateTime confirmedAt;
 
     @Type(JsonBinaryType.class)
-    @Column(name = "screenshot_urls", columnDefinition = "jsonb")
+    @Column(name = "screenshot_urls", columnDefinition = "json")
     private List<String> screenshotUrls;
 
     @Column(name = "match_replay_url", length = 500)

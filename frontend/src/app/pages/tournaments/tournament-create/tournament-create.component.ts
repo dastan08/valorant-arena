@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { TournamentService } from '../../../core/services/tournament.service';
 import { TournamentFormat } from '../../../core/models/tournament.model';
+import { environment } from '../../../core/config/environment';
 
 @Component({
   selector: 'app-tournament-create',
@@ -18,6 +19,7 @@ export class TournamentCreateComponent implements OnInit {
   savingDraft = false;
   bannerFile: File | null = null;
   bannerPreview: string | null = null;
+  minDateTime: string;
 
   tournamentFormats = [
     { value: TournamentFormat.SINGLE_ELIMINATION, label: 'Single Elimination' },
@@ -57,6 +59,10 @@ export class TournamentCreateComponent implements OnInit {
     private http: HttpClient
   ) {
     this.tournamentForm = this.createForm();
+    // Set minimum datetime to current time in local timezone
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    this.minDateTime = now.toISOString().slice(0, 16);
   }
 
   ngOnInit(): void {}
@@ -199,7 +205,7 @@ export class TournamentCreateComponent implements OnInit {
       const formData = new FormData();
       formData.append('file', this.bannerFile!);
       
-      this.http.post<any>('http://localhost:8080/api/upload/tournament-banner', formData)
+      this.http.post<any>(`${environment.apiUrl}/upload/tournament-banner`, formData)
         .subscribe({
           next: (response) => {
             if (response.success) {
@@ -219,12 +225,23 @@ export class TournamentCreateComponent implements OnInit {
     this.tournamentService.createTournament(formData).subscribe({
       next: (response) => {
         if (response.success) {
+          alert('Tournament created successfully!');
           this.router.navigate(['/tournaments', response.data.id]);
         }
         this.submitting = false;
       },
-      error: () => {
+      error: (error) => {
         this.submitting = false;
+        console.error('Error creating tournament:', error);
+        
+        // Show validation error messages
+        if (error.error?.message) {
+          alert('Error: ' + error.error.message);
+        } else if (error.status === 400) {
+          alert('Validation Error: Please check that all dates are in the future and all required fields are filled correctly.');
+        } else {
+          alert('Failed to create tournament. Please try again.');
+        }
       }
     });
   }

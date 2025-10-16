@@ -5,6 +5,7 @@ import { TournamentService } from '../../../core/services/tournament.service';
 import { Tournament, TournamentStatus } from '../../../core/models/tournament.model';
 import { AssignModeratorDialogComponent } from '../assign-moderator-dialog/assign-moderator-dialog.component';
 import { TournamentModeratorService, TournamentModeratorResponse } from '../../../core/services/tournament-moderator.service';
+import { environment } from '../../../core/config/environment';
 
 @Component({
   selector: 'app-organizer-dashboard',
@@ -196,5 +197,11 @@ export class OrganizerDashboardComponent implements OnInit {
       default:
         return 'bg-gray-600';
     }
+  }
+
+  getBannerUrl(bannerUrl: string | undefined): string {
+    if (!bannerUrl) return '';
+    if (bannerUrl.startsWith('http')) return bannerUrl;
+    return `${environment.apiUrl.replace('/api', '')}${bannerUrl}`;
   }
 }

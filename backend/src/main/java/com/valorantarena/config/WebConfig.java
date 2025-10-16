@@ -26,5 +26,10 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins(allowedOrigins.split(","))
                 .allowedMethods("GET", "HEAD")
                 .allowCredentials(true);
+        registry.addMapping("/**")
+                        .allowedOrigins("http://valorant-arena-frontend.s3-website.ap-south-1.amazonaws.com")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
     }
 }

@@ -37,6 +37,9 @@ public class DiscordOAuthService {
      */
     public DiscordTokenDto exchangeCode(String code) {
         log.info("Exchanging Discord authorization code for access token");
+        log.debug("Client ID: {}", clientId);
+        log.debug("Redirect URI: {}", redirectUri);
+        log.debug("Code (first 10 chars): {}", code.substring(0, Math.min(10, code.length())));
         
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("client_id", clientId);
@@ -51,13 +54,21 @@ public class DiscordOAuthService {
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .body(BodyInserters.fromFormData(formData))
                     .retrieve()
+                    .onStatus(
+                        status -> status.is4xxClientError() || status.is5xxServerError(),
+                        response -> response.bodyToMono(String.class)
+                            .map(body -> {
+                                log.error("Discord API error response: {}", body);
+                                return new RuntimeException("Discord API error: " + body);
+                            })
+                    )
                     .bodyToMono(DiscordTokenDto.class)
                     .block();
             
             log.info("Successfully exchanged code for Discord access token");
             return token;
         } catch (Exception e) {
-            log.error("Error exchanging Discord code", e);
+            log.error("Error exchanging Discord code. Full error: ", e);
             throw new RuntimeException("Failed to exchange Discord authorization code: " + e.getMessage());
         }
     }

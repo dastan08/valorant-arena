@@ -3,6 +3,7 @@ import { AdminService } from '../../../core/services/admin.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TeamDetailDialogComponent } from './team-detail-dialog/team-detail-dialog.component';
+import { environment } from '../../../core/config/environment';
 
 @Component({
   selector: 'app-team-management',
@@ -110,5 +111,11 @@ export class TeamManagementComponent implements OnInit {
       case 'DISBANDED': return 'cancel';
       default: return 'help';
     }
+  }
+
+  getTeamLogoUrl(logoUrl: string | undefined): string {
+    if (!logoUrl || logoUrl === 'default-team-logo.png') return 'assets/default-team-logo.png';
+    if (logoUrl.startsWith('http')) return logoUrl;
+    return `${environment.apiUrl.replace('/api', '')}${logoUrl}`;
   }
 }

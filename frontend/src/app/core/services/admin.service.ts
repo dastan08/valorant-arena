@@ -7,7 +7,7 @@ import { ApiResponse } from '../models/api-response.model';
   providedIn: 'root'
 })
 export class AdminService {
-  private baseUrl = 'http://localhost:8080/api/admin';
+  private baseUrl = 'http://13.201.185.135:8080/api/admin';
 
   constructor(private http: HttpClient) {}
 

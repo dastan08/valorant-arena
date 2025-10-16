@@ -3,12 +3,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Tournament } from '../models/tournament.model';
 import { ApiResponse } from '../models/auth.model';
+import { environment } from '../config/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TournamentService {
-  private apiUrl = 'http://localhost:8080/api/tournaments';
+  private apiUrl = `${environment.apiUrl}/tournaments`;
 
   constructor(private http: HttpClient) { }
 
@@ -70,31 +71,31 @@ export class TournamentService {
 
   // Bracket endpoints
   generateBracket(tournamentId: number): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`http://localhost:8080/api/brackets/tournaments/${tournamentId}/generate`, {});
+    return this.http.post<ApiResponse<any>>(`${environment.apiUrl}/brackets/tournaments/${tournamentId}/generate`, {});
   }
 
   getBracket(tournamentId: number): Observable<ApiResponse<any>> {
-    return this.http.get<ApiResponse<any>>(`http://localhost:8080/api/brackets/tournaments/${tournamentId}`);
+    return this.http.get<ApiResponse<any>>(`${environment.apiUrl}/brackets/tournaments/${tournamentId}`);
   }
 
   // Match endpoints
   getMatches(tournamentId: number): Observable<ApiResponse<any[]>> {
-    return this.http.get<ApiResponse<any[]>>(`http://localhost:8080/api/matches/tournament/${tournamentId}`);
+    return this.http.get<ApiResponse<any[]>>(`${environment.apiUrl}/matches/tournament/${tournamentId}`);
   }
 
   getMyMatches(): Observable<ApiResponse<any[]>> {
-    return this.http.get<ApiResponse<any[]>>(`http://localhost:8080/api/matches/my-matches`);
+    return this.http.get<ApiResponse<any[]>>(`${environment.apiUrl}/matches/my-matches`);
   }
 
   reportScore(matchId: number, scoreData: any): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`http://localhost:8080/api/matches/${matchId}/report-score`, scoreData);
+    return this.http.post<ApiResponse<any>>(`${environment.apiUrl}/matches/${matchId}/report-score`, scoreData);
   }
 
   confirmScore(matchId: number): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`http://localhost:8080/api/matches/${matchId}/confirm-score`, {});
+    return this.http.post<ApiResponse<any>>(`${environment.apiUrl}/matches/${matchId}/confirm-score`, {});
   }
 
   startMatch(matchId: number): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`http://localhost:8080/api/matches/${matchId}/start`, {});
+    return this.http.post<ApiResponse<any>>(`${environment.apiUrl}/matches/${matchId}/start`, {});
   }
 }

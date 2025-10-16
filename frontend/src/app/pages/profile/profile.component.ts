@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/user.model';
 import { ValorantService } from '../../services/valorant.service';
+import { environment } from '../../core/config/environment';
 
 @Component({
   selector: 'app-profile',
@@ -10,7 +11,7 @@ import { ValorantService } from '../../services/valorant.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  private apiUrl = 'http://localhost:8080/api';
+  private apiUrl = environment.apiUrl;
   currentUser: User | null = null;
   showLinkRiotModal = false;
   valorantId = '';

@@ -75,8 +75,8 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        allowedDomains: ['localhost:8080'],
-        disallowedRoutes: ['localhost:8080/api/auth/login', 'localhost:8080/api/auth/register']
+        allowedDomains: ['13.201.185.135:8080'],
+        disallowedRoutes: ['http://13.201.185.135:8080/api/auth/login', 'http://13.201.185.135:8080/api/auth/register']
       }
     }),
     ToastrModule.forRoot({

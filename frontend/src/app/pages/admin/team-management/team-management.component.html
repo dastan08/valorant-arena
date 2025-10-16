@@ -60,7 +60,7 @@
             <td mat-cell *matCellDef="let team" class="py-4">
               <div class="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center overflow-hidden">
                 <img *ngIf="team.logo" 
-                     [src]="'http://localhost:8080' + team.logo" 
+                     [src]="getTeamLogoUrl(team.logo)" 
                      [alt]="team.name"
                      class="w-full h-full object-cover">
                 <mat-icon *ngIf="!team.logo" class="text-gray-400">groups</mat-icon>

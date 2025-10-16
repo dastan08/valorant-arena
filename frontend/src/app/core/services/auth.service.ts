@@ -5,12 +5,13 @@ import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { LoginRequest, RegisterRequest, AuthResponse, ApiResponse } from '../models/auth.model';
 import { User } from '../models/user.model';
+import { environment } from '../config/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = `${environment.apiUrl}/auth`;
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser: Observable<User | null>;
   private isFetchingProfile = false;
@@ -104,7 +105,7 @@ export class AuthService {
   private fetchUserProfile(): void {
     this.isFetchingProfile = true;
     
-    this.http.get<ApiResponse<User>>('http://localhost:8080/api/user/profile')
+    this.http.get<ApiResponse<User>>(`${environment.apiUrl}/user/profile`)
       .subscribe({
         next: (response) => {
           this.isFetchingProfile = false;

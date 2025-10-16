@@ -50,7 +50,7 @@ jwt:
 
 # CORS Configuration
 cors:
-  allowed-origins: ${CORS_ORIGINS:http://localhost:4200}
+  allowed-origins: ${CORS_ORIGINS:http://valorant-arena-frontend.s3-website.ap-south-1.amazonaws.com}
   allowed-methods: GET,POST,PUT,DELETE,OPTIONS
   allowed-headers: "*"
   allow-credentials: true
@@ -64,7 +64,7 @@ riot:
   oauth:
     client-id: ${RIOT_CLIENT_ID:your-riot-client-id}
     client-secret: ${RIOT_CLIENT_SECRET:your-riot-client-secret}
-    redirect-uri: ${RIOT_REDIRECT_URI:http://localhost:4200/auth/riot/callback}
+    redirect-uri: ${RIOT_REDIRECT_URI:http://valorant-arena-frontend.s3-website.ap-south-1.amazonaws.com/auth/riot/callback}
     # For S3/CloudFront: Set RIOT_REDIRECT_URI=https://your-cloudfront-url/auth/riot/callback
     # For Custom Domain: Set RIOT_REDIRECT_URI=https://yourdomain.com/auth/riot/callback
     authorization-uri: https://auth.riotgames.com/authorize
@@ -76,7 +76,7 @@ riot:
 discord:
   client-id: ${DISCORD_CLIENT_ID:your-discord-client-id}
   client-secret: ${DISCORD_CLIENT_SECRET:your-discord-client-secret}
-  redirect-uri: ${DISCORD_REDIRECT_URI:http://localhost:4200/auth/discord/callback}
+  redirect-uri: ${DISCORD_REDIRECT_URI:http://valorant-arena-frontend.s3-website.ap-south-1.amazonaws.com/auth/discord/callback}
   # For S3/CloudFront: Set DISCORD_REDIRECT_URI=https://your-cloudfront-url/auth/discord/callback
   # For Custom Domain: Set DISCORD_REDIRECT_URI=https://yourdomain.com/auth/discord/callback
   bot:

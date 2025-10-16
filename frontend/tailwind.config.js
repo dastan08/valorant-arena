@@ -10,6 +10,10 @@ module.exports = {
         'valorant-dark': '#0f1923',
         'valorant-darker': '#0a0e13',
       },
+      fontFamily: {
+        'alegreya': ['Alegreya', 'serif'],
+        'sans': ['Alegreya', 'system-ui', 'sans-serif'],
+      },
     },
   },
   plugins: [],

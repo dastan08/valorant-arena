@@ -3,7 +3,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8080/api'
+  apiUrl: 'http://13.201.185.135:8080/api'
 };
 
 // For production deployment, you can either:

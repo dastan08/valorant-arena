@@ -6,6 +6,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Tournament } from '../../../core/models/tournament.model';
 import { User } from '../../../core/models/user.model';
 import { TeamDetailDialogComponent } from '../../teams/team-detail-dialog/team-detail-dialog.component';
+import { environment } from '../../../core/config/environment';
 
 @Component({
   selector: 'app-tournament-detail',
@@ -244,5 +245,17 @@ export class TournamentDetailComponent implements OnInit {
       default:
         return 'bg-gray-500';
     }
+  }
+
+  getBannerUrl(bannerUrl: string | undefined): string {
+    if (!bannerUrl) return '';
+    if (bannerUrl.startsWith('http')) return bannerUrl;
+    return `${environment.apiUrl.replace('/api', '')}${bannerUrl}`;
+  }
+
+  getTeamLogoUrl(logoUrl: string | undefined): string {
+    if (!logoUrl || logoUrl === 'default-team-logo.png') return 'assets/default-team-logo.png';
+    if (logoUrl.startsWith('http')) return logoUrl;
+    return `${environment.apiUrl.replace('/api', '')}/uploads/${logoUrl}`;
   }
 }

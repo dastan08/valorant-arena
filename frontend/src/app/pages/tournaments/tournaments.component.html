@@ -18,7 +18,7 @@
         <!-- Banner Image -->
         <div class="relative h-32 bg-gradient-to-r from-valorant-red to-red-700 overflow-hidden">
           <img *ngIf="tournament.bannerUrl || tournament.banner" 
-               [src]="'http://localhost:8080' + (tournament.bannerUrl || tournament.banner)" 
+               [src]="getBannerUrl(tournament.bannerUrl || tournament.banner)" 
                [alt]="tournament.name"
                class="w-full h-full object-cover">
         </div>

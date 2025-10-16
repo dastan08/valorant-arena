@@ -5,6 +5,7 @@ import { TeamService } from '../../../core/services/team.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/models/user.model';
 import { ChallengeScrimDialogComponent } from '../challenge-scrim-dialog/challenge-scrim-dialog.component';
+import { environment } from '../../../core/config/environment';
 
 @Component({
   selector: 'app-team-detail-dialog',
@@ -14,7 +15,7 @@ import { ChallengeScrimDialogComponent } from '../challenge-scrim-dialog/challen
 export class TeamDetailDialogComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   
-  private apiUrl = 'http://localhost:8080/api';
+  private apiUrl = environment.apiUrl;
   team: any;
   currentUser: User | null = null;
   loading = false;
@@ -442,7 +443,7 @@ export class TeamDetailDialogComponent implements OnInit {
     }
     // Add timestamp to prevent caching
     const timestamp = new Date().getTime();
-    const fullUrl = `http://localhost:8080${logo}?t=${timestamp}`;
+    const fullUrl = `${environment.apiUrl.replace('/api', '')}/${logo}?t=${timestamp}`;
     console.log('Full logo URL:', fullUrl);
     return fullUrl;
   }

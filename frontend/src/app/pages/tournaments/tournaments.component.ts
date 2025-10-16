@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TournamentService } from '../../core/services/tournament.service';
 import { Tournament } from '../../core/models/tournament.model';
+import { environment } from '../../core/config/environment';
 
 @Component({
   selector: 'app-tournaments',
@@ -54,5 +55,11 @@ export class TournamentsComponent implements OnInit {
       default:
         return 'text-gray-500';
     }
+  }
+
+  getBannerUrl(bannerUrl: string | undefined): string {
+    if (!bannerUrl) return '';
+    if (bannerUrl.startsWith('http')) return bannerUrl;
+    return `${environment.apiUrl.replace('/api', '')}${bannerUrl}`;
   }
 }

@@ -16,7 +16,7 @@ import { AuthService } from '../../../core/services/auth.service';
   `
 })
 export class DiscordCallbackComponent implements OnInit {
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = 'http://13.201.185.135:8080/api/auth';
 
   constructor(
     private route: ActivatedRoute,

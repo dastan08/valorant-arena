@@ -7,6 +7,7 @@ import { CreateTeamDialogComponent } from './create-team-dialog/create-team-dial
 import { TeamDetailDialogComponent } from './team-detail-dialog/team-detail-dialog.component';
 import { AuthService } from '../../core/services/auth.service';
 import { Subscription } from 'rxjs';
+import { environment } from '../../core/config/environment';
 
 @Component({
   selector: 'app-teams',
@@ -14,7 +15,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./teams.component.css']
 })
 export class TeamsComponent implements OnInit, OnDestroy {
-  private apiUrl = 'http://localhost:8080/api';
+  private apiUrl = environment.apiUrl;
   teams: any[] = [];
   loading = false;
   currentUser: any;
@@ -62,7 +63,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
       return logo;
     }
     const timestamp = new Date().getTime();
-    return `http://localhost:8080${logo}?t=${timestamp}`;
+    return `${environment.apiUrl.replace('/api', '')}${logo}?t=${timestamp}`;
   }
 
   ngOnDestroy(): void {

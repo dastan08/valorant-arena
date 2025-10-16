@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../config/environment';
 
 export interface TournamentModeratorRequest {
   userId: number;
@@ -28,7 +29,7 @@ export interface ApiResponse<T> {
   providedIn: 'root'
 })
 export class TournamentModeratorService {
-  private apiUrl = 'http://localhost:8080/api/tournaments';
+  private apiUrl = `${environment.apiUrl}/tournaments`;
 
   constructor(private http: HttpClient) {}
 

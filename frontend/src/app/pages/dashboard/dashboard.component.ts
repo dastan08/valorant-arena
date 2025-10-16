@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/user.model';
 import { TeamDetailDialogComponent } from '../teams/team-detail-dialog/team-detail-dialog.component';
+import { environment } from '../../core/config/environment';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,7 +12,7 @@ import { TeamDetailDialogComponent } from '../teams/team-detail-dialog/team-deta
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  private apiUrl = 'http://localhost:8080/api';
+  private apiUrl = environment.apiUrl;
   currentUser: User | null = null;
   loading = false;
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../models/auth.model';
+import { environment } from '../config/environment';
 
 export interface Scrim {
   id: number;
@@ -34,7 +35,7 @@ export interface ChallengeScrimRequest {
   providedIn: 'root'
 })
 export class ScrimService {
-  private apiUrl = 'http://localhost:8080/api/scrims';
+  private apiUrl = `${environment.apiUrl}/scrims`;
 
   constructor(private http: HttpClient) {}
 
